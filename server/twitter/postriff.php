@@ -6,7 +6,7 @@ $api_secret_key='jyjnaGkX4Uiyes8IORhZFqNaSsGYA72prYiPZGPL8l283lp1nOC';
 $access_token ='3245967814-X89h5Y5W1wGgUKVKolN9KBzixGEYz67bcMxf19HR' ;
 $access_token_secret='yW484b2XQH5gA5zJqwt3Nb1WiXiXFT448qswk5lHpn1PsM' ;
 use DG\Twitter\Twitter;
-require_once '/home/t1vgrgt1n1zj3/public_html/RockDice/twitter/twitter.class.php';
+require_once './twitter.class.php';
 function createRandomSong(){
 	$progressions=[
 		"Fmaj7-A"
