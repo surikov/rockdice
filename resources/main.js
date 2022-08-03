@@ -106,7 +106,7 @@ function handleOpenURL(url_string) {
     }
 }
 function rockDiceInitUI() {
-    console.log('rockDiceInitUI');
+    console.log('rockDiceInitUI v3.01');
     zapp = new ZvoogApp();
     rockDiceUI.connectRoundButtons(zapp);
     /*let test:HTMLElement|null=document.getElementById('drumColor');
@@ -6079,7 +6079,7 @@ var ZvoogApp = /** @class */ (function () {
                 }
                 param.comment = '' + new Date();
                 this.saveText2localStorage(this.stateName, JSON.stringify(param));
-                window.location.replace("https://zvoog.app/RockDice/main.html");
+                window.location.replace("https://surikov.github.io/rockdice/main.html");
             }
             catch (xx) {
                 console.log(xx);

@@ -46,7 +46,7 @@
     <meta charset="utf-8">
     <meta name="twitter:card" content="summary" />
     <meta property="og:title" content="<?php echo $line; ?>" />
-    <meta property="og:url" content="https://mzxbox.ru/RockDice/main.php?seed=<?php echo $encoded; ?>" />
+    <meta property="og:url" content="https://mzxbox.ru/RockDice/share.php?seed=<?php echo $encoded; ?>" />
     <meta property="og:image" content="https://mzxbox.ru/RockDice/picture.php?drums=<?php echo $drums; ?>&prog=<?php echo urlencode($line); ?>&bass=<?php echo $bass; ?>&lead=<?php echo $lead; ?>&pad=<?php echo $pad; ?>" />
     <meta property="og:description" content="RockDice Chord Progression" />
     <meta property="og:site_name" content="RockDice" />
@@ -55,7 +55,7 @@
 </head>
 <body>
 	<div>
-        <a href='https://mzxbox.ru/RockDice/main.html?seed=<?php echo $encoded; ?>' >
+        <a href='https://surikov.github.io/rockdice/main.html?seed=<?php echo $encoded; ?>' >
             <div id='picDiv'>
                 <img id='picImg' src='https://mzxbox.ru/RockDice/picture.php?drums=<?php echo $drums; ?>&prog=<?php echo urlencode($line); ?>&bass=<?php echo $bass; ?>&lead=<?php echo $lead; ?>&pad=<?php echo $pad; ?>'/>
             </div>
@@ -69,7 +69,7 @@
 	<!-- ShareThis END -->
 	
 	<div>
-		<p><a href='https://mzxbox.ru/RockDice/main.html?seed=<?php echo $encoded; ?>' >Play</a></p>
+		<p><a href='https://surikov.github.io/rockdice/main.html?seed=<?php echo $encoded; ?>' >Play</a></p>
 	</div>
 	
 </div>

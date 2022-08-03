@@ -224,7 +224,7 @@ class ZvoogApp {
 				}
 				param.comment = '' + new Date();
 				this.saveText2localStorage(this.stateName, JSON.stringify(param));
-				window.location.replace("https://zvoog.app/RockDice/main.html");
+				window.location.replace("https://surikov.github.io/rockdice/main.html");
 			} catch (xx) {
 				console.log(xx);
 			}

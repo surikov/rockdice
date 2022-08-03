@@ -105,7 +105,7 @@ function handleOpenURL(url_string: string) {
 	}
 }
 function rockDiceInitUI() {
-	console.log('rockDiceInitUI');
+	console.log('rockDiceInitUI v3.01');
 	
 	zapp = new ZvoogApp();
 	rockDiceUI.connectRoundButtons(zapp);
