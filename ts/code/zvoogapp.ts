@@ -527,7 +527,7 @@ class ZvoogApp {
 		json = JSON.stringify(tmp);
 		let seed = encodeURIComponent(json);
 
-		let url = 'http://a0702914.xsph.ru/RockDice/share.php?seed=' + seed;
+		let url = 'https://mzxbox.ru/RockDice/share.php?seed=' + seed;
 		console.log(url);
 		return url;
 	}

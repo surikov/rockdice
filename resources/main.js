@@ -6372,7 +6372,7 @@ var ZvoogApp = /** @class */ (function () {
         tmp.comment = '';
         json = JSON.stringify(tmp);
         var seed = encodeURIComponent(json);
-        var url = 'http://a0702914.xsph.ru/RockDice/share.php?seed=' + seed;
+        var url = 'https://mzxbox.ru/RockDice/share.php?seed=' + seed;
         console.log(url);
         return url;
     };

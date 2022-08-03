@@ -159,7 +159,7 @@ function createRandomSong(){
 try {
 	$twitter = new Twitter($api_key, $api_secret_key, $access_token, $access_token_secret);
 	$songSeed=str_replace("\/","/",createRandomSong());
-	$text='#WebAudio #MusicTech #MusicApp #GenerativeMusic #ProceduralArt #generativeart #proceduralmusic #chords RockDice Chord Progression http://a0702914.xsph.ru/RockDice/share.php?seed='.urlencode($songSeed);
+	$text='#WebAudio #MusicTech #MusicApp #GenerativeMusic #ProceduralArt #generativeart #proceduralmusic #chords RockDice Chord Progression https://mzxbox.ru/RockDice/share.php?seed='.urlencode($songSeed);
 	echo"\ntext: ";
 	echo $text;
 	$tweet = $twitter->send($text); // you can add $imagePath or array of image paths as second argument
