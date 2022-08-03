@@ -1,0 +1,273 @@
+<html>
+
+<head>
+	<script type='text/javascript' src='./waf/WebAudioFontPlayer.js'></script>
+	<script type='text/javascript' src='./resources/main.js'></script>
+	<script type='text/javascript' src='riffshareexport.js'></script>
+	<style>
+		.vranger {
+			margin-left: 0px;
+			transform: rotate(270deg);
+			-moz-transform: rotate(270deg);
+			height: 1cm;
+			width: 3cm;
+		}
+	</style>
+</head>
+
+<body>
+	<p>
+		<input type="file" id="riffchooser" onchange='promptloadriff();'>
+
+	</p>
+	<p><input id='rifflink' type="text"
+			value="https://surikov.github.io/RiffShareAndroid/app/src/main/assets/load.html?riff=64-37333540-50a06420-0d0d0c05080d0f0a080c-000101010201030104010501060107014010411042104312441045104610471280118111821183118411851186118711a044a144a244a344a444a544a644a744c0ffc1ffc2ffc3ffc4ffc5ffc6ffc7ff-0010c19400020f1c400020f19400020f15400050209400060c2540014012140014011c40014011940014011540035010940044022140044021c40044021940044021540065020940074022140074021c400740219400740215400950109400a40321400a4031c400a40319400a40315400a50104400b50106400c10417400c50309400c60423401010b1a401020e1e401020e1a401020e15401050209401060b2640114012140114011e40114011a40114011540135010940144022140144021e40144021a40144021540165040940174022140174021e40174021a401740215401a40521401a4051e401a4051a401a40515401a50104401b50104401c10119401c50206401c60125401d10117401d60123401e50208401f10115401f6012140201031740202101c40202101940202101540205020940206032340214012140214011c40214011940214011540231021940235010940236022540244022140244021c402440219402440215402611a19402650309402661a2540274022140274021c402740219402740215402950109402a40521402a4051c402a40519402a40515402a50104402b40134402b40131402b4012d402b50106402c40334402c40331402c4032d402c50409402f40138402f40134402f4012f402f4012c40302101e40302101a40302101540304033840304033440304032f40304032c40305020940314012140314011e40314011a40314011540334013640334013240334012d40334012a40335020940344022140344021e40344021a40344021540344093640344093240344082d40344092a40365030940374022140374021e40374021a403740215403950109403a40521403a4051e403a4051a403a40515403a50204403c50206403e5020840-000000000000000000000000-000000000000000000000000" />
+	</p>
+	<p>
+		<a href='javascript:;' onclick='convertriff();'>convert riff</a>
+
+	</p>
+	<textarea id='jsontext'>
+		...
+	  </textarea>
+
+	<p><a href='javascript:;' onclick='prepareriff();'>prepare riff</a></p>
+	<pre id='infopane'></pre>
+	<p><a href='javascript:;' onclick='playriff();'>play riff</a></p>
+	<p><a href='javascript:;' onclick='stopriff();'>stop riff</a></p>
+	<p><a href='javascript:;' onclick='exportriff();'>export riff</a></p>
+
+	<script>
+		var zapp = new ZvoogApp();
+		console.log(zapp);
+		//var sch = '';
+		var riffurl = '';
+		document.getElementById("jsontext").value = JSON.stringify(window["importedZvoogSchedule"]);
+
+		function promptloadriff() {
+			//console.log('promptloadriff');
+			var input = document.getElementById('riffchooser');
+			//console.log(input);
+			var curFiles = input.files;
+			//console.log(curFiles);
+			var fr = new FileReader();
+			fr.onload = function () {
+				console.log(fr.result);
+				eval(fr.result);
+				console.log(importedZvoogSchedule);
+				document.getElementById("jsontext").value = JSON.stringify(window["importedZvoogSchedule"]);
+				document.getElementById("rifflink").value = '';
+
+			}
+			fr.readAsText(curFiles[0]);
+		}
+
+		function convertriff() {
+			var x = document.getElementById("rifflink");
+			riffurl = x.value;
+			var converted = fromRiffShare(riffurl);
+			document.getElementById("jsontext").value = JSON.stringify(converted);
+		}
+
+		function prepareriff() {
+			//var riffurl =
+			//	'https://surikov.github.io/RiffShareAndroid/app/src/main/assets/load.html?riff=64-610077a0-50a04004-0c0d0e050709100f080e-00c3010302c3030304c3050306c307db4030413042304330443045304630472480fe81ff82ff83ff84ff85ff86ff87ffe001-000032e40001021b40001021d40001022240004032e40005030a40021021b40021021d40021022240041021b40041021d40041022240046010a40046011640056010840056011440061021b40061021d40061022240065020a40066020a40066021640081021840081021d400810220400850305400860305400860311400a10218400a1021d400a10220400a40229400c10218400c1021d400c10220400c40224400e10218400e1021d400e10220400e40220400e5020540101021840101021d40101022040104022940105030540121021840121021d40121022040124022440141021840141021d40141022040144042040146010a40146011640156010840156011440161021840161021d40161022040165020540166020a40166021640181021b40181021f401810222401850307401860307401860313401a1021b401a1021f401a10222401a40229401c1021b401c1021f401c10222401c40227401e1021b401e1021f401e10222401e40222401e5020740201021b40201021f40201022240204022940205030740221021b40221021f40221022240224022740241021b40241021f40241022240244042240246010a40246011640256010840256011440261021b40261021f40261022240265020740266020a40266021640281021b40281021d402810220402810224402850308402860308402860314402a0022c402a1021b402a1021d402a10220402a10224402a4022c402c0022b402c1021b402c1021d402c10220402c10224402c4022b402e00229402e1021b402e1021d402e10220402e10224402e40229402e5020840300022740301021b40301021d40301022040301022440304022740305030840320022440321021b40321021d40321022040321022440324022440340022240341021b40341021d40341022040341022440344022240360022040361021b40361021d40361022040361022440364022040365020840380022240381021b40381021d40381022240384022240385030a403a00222403a1021b403a1021d403a10222403a40222403c00222403c1021b403c1021d403c10222403c40222403e00226403e1021b403e1021d403e10222403e40226403e5020a40-000000000000000000000000-000000000000000000000000';
+
+			//sch = fromRiffShare(riffurl);
+			var sch = JSON.parse(document.getElementById("jsontext").value);
+			//console.log(sch);
+
+			zapp_testPrepare(sch);
+			setInfo();
+		}
+
+		function zapp_testPrepare(testSch) {
+			zapp.schedule = testSch;
+			zapp.harmonizer = new ZvoogHarmonizer();
+			zapp.ticker = new ZvoogTicker();
+			console.log(zapp.ticker);
+			let AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+			zapp.audioContext = new AudioContextFunc();
+			if (testSch.tracks[1]) zapp.harmonizer.fillTrackVoicesByPatterns(1, testSch);
+			if (testSch.tracks[2]) zapp.harmonizer.fillTrackVoicesByPatterns(2, testSch);
+			if (testSch.tracks[3]) zapp.harmonizer.fillTrackVoicesByPatterns(3, testSch);
+			zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
+			zapp.waitStart(null);
+			//console.log(testSch);
+		}
+
+		function voiceInfo(trackNum, voiceNum) {
+			//var voice = sch.tracks[trackNum].voices[voiceNum];
+			var voice = zapp.schedule.tracks[trackNum].voices[voiceNum];
+
+			var html = '   voice ' + voice.title;
+			html = html + ':move to <a onclick="moveTo(' + trackNum + ',' + voiceNum + ',0);">drums</a>'
+			html = html + '/<a onclick="moveTo(' + trackNum + ',' + voiceNum + ',1);">bass</a>'
+			html = html + '/<a onclick="moveTo(' + trackNum + ',' + voiceNum + ',2);">lead</a>'
+			html = html + '/<a onclick="moveTo(' + trackNum + ',' + voiceNum + ',3);">pad</a>'
+
+			html = html + " volume <input type='range' min='0' max='119' value='" + voice.effects[0].parameters[0].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 0 + "," + 0 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[0].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 0 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[1].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 1 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[2].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 2 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[3].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 3 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[4].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 4 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[5].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 5 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[6].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 6 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[7].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 7 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[8].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 8 + ", this.value)'>";
+			html = html + "\n		<input type='range' min='0' max='119' value='" + voice.effects[1].parameters[9].points[0].velocity + "' onchange='changePar(" + trackNum + "," + voiceNum + "," + 1 + "," + 9 + ", this.value)'>";
+			return html;
+		}
+
+		function changePar(trackNum, voiceNum, fxNum, parNum, val) {
+			//console.log(track, voice, fx, par, val);
+			var voice = zapp.schedule.tracks[trackNum].voices[voiceNum];
+			voice.effects[fxNum].parameters[parNum].points[0].velocity=val;
+			//stopriff();
+			//playriff();
+			zapp.ticker.restart();
+		}
+
+		function moveTo(trackNum, voiceNum, toTrack) {
+			//console.log('moveTo', trackNum, voiceNum, toTrack);
+			//prepareriff();
+
+			//while (sch.tracks.length < 4) {
+			while (zapp.schedule.tracks.length < 4) {
+
+				var trtitle = 'new track';
+				//if(sch.tracks.length<0)trtitle='drums';
+				//if(sch.tracks.length<1)trtitle='bass';
+				//if(sch.tracks.length<2)trtitle='lead';
+				//if(sch.tracks.length<3)trtitle='pad';
+				var tt = {
+					title: 'New track',
+					voices: [],
+					effects: [{
+						pluginEffect: null,
+						kind: "gain",
+						initial: "",
+						parameters: [{
+							points: [{
+								skipMeasures: 0,
+								skip384: 0,
+								velocity: 119
+							}]
+						}]
+					}]
+				};
+				zapp.schedule.tracks.push(tt);
+				zapp.ticker.connectTrack(tt);
+			}
+			zapp.schedule.tracks[0].title = 'Drums';
+			zapp.schedule.tracks[1].title = 'Bass';
+			zapp.schedule.tracks[2].title = 'Lead';
+			zapp.schedule.tracks[3].title = 'Pad';
+			var oldTrack = zapp.schedule.tracks[trackNum];
+			var newTrack = zapp.schedule.tracks[toTrack];
+			var voice = oldTrack.voices[voiceNum];
+			zapp.ticker.unconnectVoice(voice);
+			oldTrack.voices.splice(voiceNum, 1);
+			newTrack.voices.push(voice);
+			zapp.ticker.connectVoice(voice, newTrack);
+			zapp.ticker.restart();
+			setInfo();
+
+		}
+
+		function drumVol(v) {
+			//console.log('drumVol', v);
+			zapp.setDrumsVolume(v);
+			zapp.ticker.restart();
+		}
+
+		function bassVol(v) {
+			//console.log('bassVol', v);
+			zapp.setBassVolume(v);
+			zapp.ticker.restart();
+		}
+
+		function leadVol(v) {
+			//console.log('leadVol', v);
+			zapp.setLeadVolume(v);
+			zapp.ticker.restart();
+		}
+
+		function padVol(v) {
+			//console.log('padVol', v);
+			zapp.setPadVolume(v);
+			zapp.ticker.restart();
+		}
+
+		function setInfo() {
+			var infopane = document.getElementById("infopane");
+			html = '';
+			html = 'title: ' + zapp.schedule.title
+			if (zapp.schedule.tracks[0]) {
+				var track = zapp.schedule.tracks[0];
+				html = html + '\n<hr/>'
+				html = html + '\n drums part ' + track.title + "<input id='v_drums' type='range' min='0' max='119' value='119' oninput='drumVol(this.value)'>";
+				for (var i = 0; i < track.voices.length; i++) {
+					html = html + '\n' + voiceInfo(0, i);
+				}
+			}
+			if (zapp.schedule.tracks[1]) {
+				var track = zapp.schedule.tracks[1];
+				html = html + '\n<hr/>'
+				html = html + '\n bass part ' + track.title + "<input id='v_drums' type='range' min='0' max='119' value='119' oninput='bassVol(this.value)'>";
+				for (var i = 0; i < track.voices.length; i++) {
+					html = html + '\n' + voiceInfo(1, i);
+				}
+			}
+			if (zapp.schedule.tracks[2]) {
+				var track = zapp.schedule.tracks[2];
+				html = html + '\n<hr/>'
+				html = html + '\n lead part ' + track.title + "<input id='v_drums' type='range' min='0' max='119' value='119' oninput='leadVol(this.value)'>";
+				for (var i = 0; i < track.voices.length; i++) {
+					html = html + '\n' + voiceInfo(2, i);
+				}
+			}
+			if (zapp.schedule.tracks[3]) {
+				var track = zapp.schedule.tracks[3];
+				html = html + '\n<hr/>'
+				html = html + '\n pad part ' + track.title + "<input id='v_drums' type='range' min='0' max='119' value='119' oninput='padVol(this.value)'>";
+				for (var i = 0; i < track.voices.length; i++) {
+					html = html + '\n' + voiceInfo(3, i);
+				}
+			}
+			html = html + '\n<hr/>'
+			html = html + '\n' + zapp.schedule.harmony.tone + ':' + zapp.schedule.harmony.mode;
+			for (var i = 0; i < zapp.schedule.harmony.progression.length; i++) {
+				html = html + ' ' + zapp.schedule.harmony.progression[i].chord +
+					':' + zapp.schedule.harmony.progression[i].duration.count +
+					'/' + zapp.schedule.harmony.progression[i].duration.division;
+			}
+			infopane.innerHTML = html;
+		}
+
+		function playriff() {
+			zapp.startPlay();
+		}
+
+		function stopriff() {
+			zapp.cancelPlay();
+		}
+
+		function exportriff() {
+			//var txt = JSON.stringify(zapp.harmonizer.clearCloneSchedule(sch),null,1);
+			var txt = JSON.stringify(zapp.harmonizer.clearCloneSchedule(zapp.schedule), null, '	');
+			txt = '//' + riffurl + '\n window["importedZvoogSchedule"]=' + txt + ';';
+			console.log(txt);
+			var a = document.createElement('a');
+			var dataObj = new Blob([txt], {
+				type: 'text/javascript'
+			});
+			a.href = URL.createObjectURL(dataObj);
+			a.download = 'riffsharetester.js';
+			a.click();
+		}
+	</script>
+</body>
+
+</html>

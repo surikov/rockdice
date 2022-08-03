@@ -1,0 +1,49 @@
+window["importedZvoogSchedule"]={"title"
+	 :"chords progression"
+	 ,"tracks":[{"title":"drums","voices":[]
+			 ,"effects":[
+				{"pluginEffect":null,"kind":"gain","initial":"","parameters":[{"points":[{"skipMeasures":0,"skip384":0,"velocity":119}]}]}
+				]}
+		 ,{"title":"bass","voices":[]
+			 ,"effects":[{"pluginEffect":null,"kind":"gain","initial":"","parameters":[{"points":[{"skipMeasures":0,"skip384":0,"velocity":119}]}]}]}
+		 ,{"title":"lead","voices":[
+				 {"measureChords":[]
+					 ,"source":{"pluginSource":null,"kind":"wafinstrument","initial":"256","parameters":[]}
+					 ,"effects":[{"pluginEffect":null,"kind":"gain","initial":"","parameters":[{"points":[{"skipMeasures":0,"skip384":0,"velocity":77}]}]}
+							,{"pluginEffect":null,"kind":"equalizer","initial":"","parameters":[
+							{"points":[{"skipMeasures":0,"skip384":0,"velocity":78}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":78}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":72}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":54}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":96}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":84}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":60}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":84}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":42}]}
+							,{"points":[{"skipMeasures":0,"skip384":0,"velocity":72}]}]}
+					 ],"bass":true,"title":"Strum guitar","stringPattern":null,"strumPattern":{
+"directions":'V---A-V---A-V-A-'
+						 },"keyPattern":null}
+			 ]
+			 ,"effects":[{"pluginEffect":null,"kind":"gain","initial":"","parameters":[{"points":[{"skipMeasures":0,"skip384":0,"velocity":119}]}]}]}
+		 ,{"title":"pad","voices":[],"effects":[{"pluginEffect":null,"kind":"gain","initial":"","parameters":[{"points":[{"skipMeasures":0,"skip384":0,"velocity":119}]}]}]}
+	 ]
+	 ,"effects":[
+		{"pluginEffect":null,"kind":"echo","initial":"","parameters":[
+			{"points":[{"skipMeasures":0,"skip384":0,"velocity":29.75}]}
+			,{"points":[{"skipMeasures":0,"skip384":0,"velocity":59.5}]}
+			,{"points":[{"skipMeasures":0,"skip384":0,"velocity":109}]}
+			,{"points":[{"skipMeasures":0,"skip384":0,"velocity":59.5}]}
+			,{"points":[{"skipMeasures":0,"skip384":0,"velocity":2.38}]}
+			,{"points":[{"skipMeasures":0,"skip384":0,"velocity":29.75}]}]}
+		,{"pluginEffect":null,"kind":"gain","initial":"","parameters":[{"points":[{"skipMeasures":0,"skip384":0,"velocity":119}]}]}
+		]
+	,"measures":[
+		{"meter":{"count":4,"division":1},"tempo":120}
+	]
+	,"harmony":{"tone":"F","mode":"Aeolian","progression":[
+		{"duration":{"count":2,"division":1},"chord":"Fmaj7"}
+		,{"duration":{"count":2,"division":1},"chord":"A"}
+	]}
+};
+ 

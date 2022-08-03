@@ -1,0 +1,475 @@
+<html>
+
+<head>
+	<title>RockDice Pro</title>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="initial-scale=1.0, width=device-width, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no" />
+	<script src="resources/main.js"></script>
+	<script type='text/javascript' src='./js/midiwrite_index.js'></script>
+	<script type='text/javascript' src='./waf/WebAudioFontPlayer.js'></script>
+	<link rel="stylesheet" href="resources/main.css">
+</head>
+
+<body>
+
+	<div id='mainDiv'>
+		<div id="playDiv">
+			<div id="partDrums"><img src='bg/empty.png' id='imgBgDrums' class='partImage' /></div>
+			<div id="partBass"><img src='bg/empty.png' id='imgBgBass' class='partImage' /></div>
+			<div id="partLead"><img src='bg/empty.png' id='imgBgLead' class='partImage' /></div>
+			<div id="partPad"><img src='bg/empty.png' id='imgBgPad' class='partImage' /></div>
+		</div>
+		<div id="recordFog">&nbsp;</div>
+		<div id="partFog">&nbsp;</div>
+		<div id="pauseDiv">&nbsp;</div>
+		<a href='javascript:;' onclick='rockDiceClickStartInit();'>
+			<div id="fogInitDiv">
+				<img src='resources/buttonPlay.svg' id='initPlayButton' class='fogInitButton' />
+			</div>
+		</a>
+		<div id="midiExportDiv">
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseMIDIExport();' />
+			</div>
+			<p>File saved</p>
+			<p id='exportLabel' class="smallFont"></p>
+		</div>
+		<div id="appOptionsDiv">
+
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseOptionsDiv();' />
+			</div>
+			<div class='maxWidth16'>
+				<h4 id='titleVersion'>v2.01</h4>
+				<h1>Tempo</h1>
+				<p><input type="range" min="80" max="180" value="130" class="optionsSlider" id='tempoSlider'
+						onChange='rockDiceTempoSliderChanged();'></p>
+				<h1>Tracks</h1>
+				<div class='trackOptRow'>
+					<div class='trackNameSliderPart'>
+						<p>Drums</p>
+						<p><input type="range" min="0" max="119" value="11" class="optionsSlider" id='drumVolumeSlider'
+								onChange='rockDiceDrumsSliderChanged();'></p>
+					</div>
+					<input type="image" src='resources/buttonList.svg' class='menuButton'
+						onclick='rockDiceClickDrumsList();' />
+				</div>
+				<div class='trackOptRow'>
+
+					<div class='trackNameSliderPart'>
+						<p>Bass</p>
+						<p><input type="range" min="0" max="119" value="11" class="optionsSlider" id='bassVolumeSlider'
+								onChange='rockDiceBassSliderChanged();'></p>
+					</div>
+					<input type="image" src='resources/buttonList.svg' class='menuButton'
+						onclick='rockDiceClickBassList();' />
+				</div>
+				<div class='trackOptRow'>
+
+					<div class='trackNameSliderPart'>
+						<p>Lead</p>
+						<p><input type="range" min="0" max="119" value="11" class="optionsSlider" id='leadVolumeSlider'
+								onChange='rockDiceLeadSliderChanged();'></p>
+					</div>
+					<input type="image" src='resources/buttonList.svg' class='menuButton'
+						onclick='rockDiceClickLeadList();' />
+				</div>
+				<div class='trackOptRow'>
+
+					<div class='trackNameSliderPart'>
+						<p>Pad</p>
+						<p><input type="range" min="0" max="119" value="11" class="optionsSlider" id='padVolumeSlider'
+								onChange='rockDicePadSliderChanged();'></p>
+					</div>
+					<input type="image" src='resources/buttonList.svg' class='menuButton'
+						onclick='rockDiceClickPadList();' />
+				</div>
+				<p>&nbsp;</p>
+				<h1>Chord Progression</h1>
+				<p id='toolsProgList' class='alignRight'>
+					<input type="image" src='resources/buttonTransposeUp.svg' class='menuButton'
+						onclick='rockDiceClickProgUp();' />
+					<input type="image" src='resources/buttonTransposeDown.svg' class='menuButton'
+						onclick='rockDiceClickProgDown();' />
+
+					<input type="image" src='resources/buttonRandomise.svg' class='menuButton'
+						onclick='rockDiceClickProgRefit();' />
+					<input type="image" src='resources/buttonText.svg' class='menuButton'
+						onclick='rockDiceClickProgPrompt();' />
+					<input type="image" src='resources/buttonList.svg' class='menuButton'
+						onclick='rockDiceClickProgList();' />
+				</p>
+				<div>
+					<p><a id='chord0' href='javascript:rockDicePromptChord(0);'> A# </a> <a id='chord1'
+							href='javascript:rockDicePromptChord(1);'> ___ </a> <a id='chord2'
+							href='javascript:rockDicePromptChord(2);'> ___ </a> <a id='chord3'
+							href='javascript:rockDicePromptChord(3);'> ___ </a> <a id='chord4'
+							href='javascript:rockDicePromptChord(4);'> A# </a> <a id='chord5'
+							href='javascript:rockDicePromptChord(5);'> ___ </a> <a id='chord6'
+							href='javascript:rockDicePromptChord(6);'> ___ </a> <a id='chord7'
+							href='javascript:rockDicePromptChord(7);'> ___ </a></p>
+					<p><a id='chord8' href='javascript:rockDicePromptChord(8);'> B# </a> <a id='chord9'
+							href='javascript:rockDicePromptChord(9);'> ___ </a> <a id='chord10'
+							href='javascript:rockDicePromptChord(10);'> ___ </a> <a id='chord11'
+							href='javascript:rockDicePromptChord(11);'> ___ </a> <a id='chord12'
+							href='javascript:rockDicePromptChord(12);'> A# </a> <a id='chord13'
+							href='javascript:rockDicePromptChord(13);'> ___ </a> <a id='chord14'
+							href='javascript:rockDicePromptChord(14);'> ___ </a> <a id='chord15'
+							href='javascript:rockDicePromptChord(15);'> ___ </a></p>
+					<p><a id='chord16' href='javascript:rockDicePromptChord(16);'> C# </a> <a id='chord17'
+							href='javascript:rockDicePromptChord(17);'> ___ </a> <a id='chord18'
+							href='javascript:rockDicePromptChord(18);'> ___ </a> <a id='chord19'
+							href='javascript:rockDicePromptChord(19);'> ___ </a> <a id='chord20'
+							href='javascript:rockDicePromptChord(20);'> A# </a> <a id='chord21'
+							href='javascript:rockDicePromptChord(21);'> ___ </a> <a id='chord22'
+							href='javascript:rockDicePromptChord(22);'> ___ </a> <a id='chord23'
+							href='javascript:rockDicePromptChord(23);'> ___ </a></p>
+					<p><a id='chord24' href='javascript:rockDicePromptChord(24);'> D# </a> <a id='chord25'
+							href='javascript:rockDicePromptChord(25);'> ___ </a> <a id='chord26'
+							href='javascript:rockDicePromptChord(26);'> ___ </a> <a id='chord27'
+							href='javascript:rockDicePromptChord(27);'> ___ </a> <a id='chord28'
+							href='javascript:rockDicePromptChord(28);'> A# </a> <a id='chord29'
+							href='javascript:rockDicePromptChord(29);'> ___ </a> <a id='chord30'
+							href='javascript:rockDicePromptChord(30);'> ___ </a> <a id='chord31'
+							href='javascript:rockDicePromptChord(31);'> ___ </a></p>
+					<p id='toolsLoop4' class='alignRight'><input type="image" src='resources/button4x4.svg'
+							class='menuButton' onclick='rockDiceClick4x4();' /></p>
+					<div id='divLoop8'>
+						<p>
+							<a id='chord32' href='javascript:rockDicePromptChord(32);'> A# </a>
+							<a id='chord33' href='javascript:rockDicePromptChord(33);'> A# </a>
+							<a id='chord34' href='javascript:rockDicePromptChord(34);'> A# </a>
+							<a id='chord35' href='javascript:rockDicePromptChord(35);'> A# </a>
+							<a id='chord36' href='javascript:rockDicePromptChord(36);'> A# </a>
+							<a id='chord37' href='javascript:rockDicePromptChord(37);'> A# </a>
+							<a id='chord38' href='javascript:rockDicePromptChord(38);'> A# </a>
+							<a id='chord39' href='javascript:rockDicePromptChord(39);'> A# </a>
+						</p>
+						<p>
+							<a id='chord40' href='javascript:rockDicePromptChord(40);'> A# </a>
+							<a id='chord41' href='javascript:rockDicePromptChord(41);'> A# </a>
+							<a id='chord42' href='javascript:rockDicePromptChord(42);'> A# </a>
+							<a id='chord43' href='javascript:rockDicePromptChord(43);'> A# </a>
+							<a id='chord44' href='javascript:rockDicePromptChord(44);'> A# </a>
+							<a id='chord45' href='javascript:rockDicePromptChord(45);'> A# </a>
+							<a id='chord46' href='javascript:rockDicePromptChord(46);'> A# </a>
+							<a id='chord47' href='javascript:rockDicePromptChord(47);'> A# </a>
+						</p>
+						<p>
+							<a id='chord48' href='javascript:rockDicePromptChord(48);'> A# </a>
+							<a id='chord49' href='javascript:rockDicePromptChord(49);'> A# </a>
+							<a id='chord50' href='javascript:rockDicePromptChord(50);'> A# </a>
+							<a id='chord51' href='javascript:rockDicePromptChord(51);'> A# </a>
+							<a id='chord52' href='javascript:rockDicePromptChord(52);'> A# </a>
+							<a id='chord53' href='javascript:rockDicePromptChord(53);'> A# </a>
+							<a id='chord54' href='javascript:rockDicePromptChord(54);'> A# </a>
+							<a id='chord55' href='javascript:rockDicePromptChord(55);'> A# </a>
+						</p>
+						<p>
+							<a id='chord56' href='javascript:rockDicePromptChord(56);'> A# </a>
+							<a id='chord57' href='javascript:rockDicePromptChord(57);'> A# </a>
+							<a id='chord58' href='javascript:rockDicePromptChord(58);'> A# </a>
+							<a id='chord59' href='javascript:rockDicePromptChord(59);'> A# </a>
+							<a id='chord60' href='javascript:rockDicePromptChord(60);'> A# </a>
+							<a id='chord61' href='javascript:rockDicePromptChord(61);'> A# </a>
+							<a id='chord62' href='javascript:rockDicePromptChord(62);'> A# </a>
+							<a id='chord63' href='javascript:rockDicePromptChord(63);'> A# </a>
+						</p>
+					</div>
+					<p id='toolsLoop8' class='alignRight'>
+						<input type="image" src='resources/button8x2.svg' class='menuButton'
+							onclick='rockDiceClick8x2();' />
+					</p>
+					<div id='divLoop16'>
+						<p>
+							<a id='chord64' href='javascript:rockDicePromptChord(64);'> A# </a>
+							<a id='chord65' href='javascript:rockDicePromptChord(65);'> A# </a>
+							<a id='chord66' href='javascript:rockDicePromptChord(66);'> A# </a>
+							<a id='chord67' href='javascript:rockDicePromptChord(67);'> A# </a>
+							<a id='chord68' href='javascript:rockDicePromptChord(68);'> A# </a>
+							<a id='chord69' href='javascript:rockDicePromptChord(69);'> A# </a>
+							<a id='chord70' href='javascript:rockDicePromptChord(70);'> A# </a>
+							<a id='chord71' href='javascript:rockDicePromptChord(71);'> A# </a>
+						</p>
+						<p>
+							<a id='chord72' href='javascript:rockDicePromptChord(72);'> A# </a>
+							<a id='chord73' href='javascript:rockDicePromptChord(73);'> A# </a>
+							<a id='chord74' href='javascript:rockDicePromptChord(74);'> A# </a>
+							<a id='chord75' href='javascript:rockDicePromptChord(75);'> A# </a>
+							<a id='chord76' href='javascript:rockDicePromptChord(76);'> A# </a>
+							<a id='chord77' href='javascript:rockDicePromptChord(77);'> A# </a>
+							<a id='chord78' href='javascript:rockDicePromptChord(78);'> A# </a>
+							<a id='chord79' href='javascript:rockDicePromptChord(79);'> A# </a>
+						</p>
+						<p>
+							<a id='chord80' href='javascript:rockDicePromptChord(80);'> A# </a>
+							<a id='chord81' href='javascript:rockDicePromptChord(81);'> A# </a>
+							<a id='chord82' href='javascript:rockDicePromptChord(82);'> A# </a>
+							<a id='chord83' href='javascript:rockDicePromptChord(83);'> A# </a>
+							<a id='chord84' href='javascript:rockDicePromptChord(84);'> A# </a>
+							<a id='chord85' href='javascript:rockDicePromptChord(85);'> A# </a>
+							<a id='chord86' href='javascript:rockDicePromptChord(86);'> A# </a>
+							<a id='chord87' href='javascript:rockDicePromptChord(87);'> A# </a>
+						</p>
+						<p>
+							<a id='chord88' href='javascript:rockDicePromptChord(88);'> A# </a>
+							<a id='chord89' href='javascript:rockDicePromptChord(89);'> A# </a>
+							<a id='chord90' href='javascript:rockDicePromptChord(90);'> A# </a>
+							<a id='chord91' href='javascript:rockDicePromptChord(91);'> A# </a>
+							<a id='chord92' href='javascript:rockDicePromptChord(92);'> A# </a>
+							<a id='chord93' href='javascript:rockDicePromptChord(93);'> A# </a>
+							<a id='chord94' href='javascript:rockDicePromptChord(94);'> A# </a>
+							<a id='chord95' href='javascript:rockDicePromptChord(95);'> A# </a>
+						</p>
+						<p>
+							<a id='chord96' href='javascript:rockDicePromptChord(96);'> A# </a>
+							<a id='chord97' href='javascript:rockDicePromptChord(97);'> A# </a>
+							<a id='chord98' href='javascript:rockDicePromptChord(98);'> A# </a>
+							<a id='chord99' href='javascript:rockDicePromptChord(99);'> A# </a>
+							<a id='chord100' href='javascript:rockDicePromptChord(100);'> A# </a>
+							<a id='chord101' href='javascript:rockDicePromptChord(101);'> A# </a>
+							<a id='chord102' href='javascript:rockDicePromptChord(102);'> A# </a>
+							<a id='chord103' href='javascript:rockDicePromptChord(103);'> A# </a>
+						</p>
+						<p>
+							<a id='chord104' href='javascript:rockDicePromptChord(104);'> A# </a>
+							<a id='chord105' href='javascript:rockDicePromptChord(105);'> A# </a>
+							<a id='chord106' href='javascript:rockDicePromptChord(106);'> A# </a>
+							<a id='chord107' href='javascript:rockDicePromptChord(107);'> A# </a>
+							<a id='chord108' href='javascript:rockDicePromptChord(108);'> A# </a>
+							<a id='chord109' href='javascript:rockDicePromptChord(109);'> A# </a>
+							<a id='chord110' href='javascript:rockDicePromptChord(110);'> A# </a>
+							<a id='chord111' href='javascript:rockDicePromptChord(111);'> A# </a>
+						</p>
+						<p>
+							<a id='chord112' href='javascript:rockDicePromptChord(112);'> A# </a>
+							<a id='chord113' href='javascript:rockDicePromptChord(113);'> A# </a>
+							<a id='chord114' href='javascript:rockDicePromptChord(114);'> A# </a>
+							<a id='chord115' href='javascript:rockDicePromptChord(115);'> A# </a>
+							<a id='chord116' href='javascript:rockDicePromptChord(116);'> A# </a>
+							<a id='chord117' href='javascript:rockDicePromptChord(117);'> A# </a>
+							<a id='chord118' href='javascript:rockDicePromptChord(118);'> A# </a>
+							<a id='chord119' href='javascript:rockDicePromptChord(119);'> A# </a>
+						</p>
+						<p>
+							<a id='chord120' href='javascript:rockDicePromptChord(120);'> A# </a>
+							<a id='chord121' href='javascript:rockDicePromptChord(121);'> A# </a>
+							<a id='chord122' href='javascript:rockDicePromptChord(122);'> A# </a>
+							<a id='chord123' href='javascript:rockDicePromptChord(123);'> A# </a>
+							<a id='chord124' href='javascript:rockDicePromptChord(124);'> A# </a>
+							<a id='chord125' href='javascript:rockDicePromptChord(125);'> A# </a>
+							<a id='chord126' href='javascript:rockDicePromptChord(126);'> A# </a>
+							<a id='chord127' href='javascript:rockDicePromptChord(127);'> A# </a>
+						</p>
+					</div>
+				</div>
+				<p>&nbsp;</p>
+			</div>
+		</div>
+		<div id="undoListDiv" class='selectionListDiv'>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseUndoDiv();' />
+			</div>
+			<div class='maxWidth16'>
+				<h1>History</h1>
+				<div class='maxWidth16' id='undoListContent'>
+					<p><a href='javascript:;' onclick='clickUndoItem(0);'>
+							<span id='spotDrum0'>◯</span><span style='color:#ff0000' id='spotBass0'>◯</span><span
+								id='spotLead0'>◯</span><span id='spotPad0'>◯</span> A#-Bb-C7
+							<br />
+							<span class="smallFont">27.03.2020 12-34</span>
+						</a>
+					</p>
+					<p>undo item 2</p>
+
+				</div>
+			</div>
+		</div>
+		<div id="progListDiv" class='selectionListDiv'>
+			<h1>Progression</h1>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseProgDiv();' />
+			</div>
+			<div class='maxWidth16' id='progListContent'>
+				<p>prog 1</p>
+				<p>prog 2</p>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div id="excerptsListDiv" class='selectionListDiv'>
+			<h1>Excerpts</h1>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseExcerptsDiv();' />
+			</div>
+			<div class='maxWidth16' id='excerptsListContent'>
+				<p>ex 1</p>
+				<p>ex 2</p>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div id="excerptPromptDiv" class='selectionListDiv'>
+			<h1 id='excerptTitle'>Excerpts</h1>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceClosePromptExcerptDiv();' />
+			</div>
+			<div class='maxWidth16'>
+				<p><a id='exExProg' href='javascript:;' onclick='rockDiceClosePromptExcerptDiv(0);'>Progression</a></p>
+				<p><a id='exExDrums' href='javascript:;' onclick='rockDiceClosePromptExcerptDiv(0);'>Drums</a></p>
+				<p><a id='exExBass' href='javascript:;' onclick='rockDiceClosePromptExcerptDiv(0);'>Bass</a></p>
+				<p><a id='exExLead' href='javascript:;' onclick='rockDiceClosePromptExcerptDiv(0);'>Lead</a></p>
+				<p><a id='exExPad' href='javascript:;' onclick='rockDiceClosePromptExcerptDiv(0);'>Pad</a></p>
+				<p><a id='exExAll' href='javascript:;' onclick='rockDiceClosePromptExcerptDiv(0);'>All</a></p>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div id="drumsListDiv" class='selectionListDiv'>
+			<h1>Drums</h1>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseDrumsDiv();' />
+			</div>
+			<div class='maxWidth16' id='drumListContent'>
+				<p><a href='javascript:;' onclick='rockDiceClickDrumsItem(0);' class='unselListItem'>drums 1</a></p>
+				<p><a href='javascript:;' onclick='rockDiceClickDrumsItem(0);' class='selectedListItem'>another 2</a>
+				</p>
+				<p><a href='javascript:;' onclick='rockDiceClickDrumsItem(0);' class='unselListItem'>next 3</a></p>
+				<p><a href='javascript:;' onclick='rockDiceClickDrumsItem(0);' class='unselListItem'>drums 1</a></p>
+				<p><a href='javascript:;' onclick='rockDiceClickDrumsItem(0);' class='unselListItem'>another 2</a></p>
+				<p><a href='javascript:;' onclick='rockDiceClickDrumsItem(0);' class='unselListItem'>next 3</a></p>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div id="bassListDiv" class='selectionListDiv'>
+			<h1>Bass</h1>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseBassDiv();' />
+			</div>
+			<div class='maxWidth16' id='bassListContent'>
+				<p>bass 1</p>
+				<p>bass 2</p>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div id="leadListDiv" class='selectionListDiv'>
+			<h1>Lead</h1>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceCloseLeadDiv();' />
+			</div>
+			<div class='maxWidth16' id='leadListContent'>
+				<p>lead 1</p>
+				<p>lead 2</p>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div id="padListDiv" class='selectionListDiv'>
+			<h1>Pad</h1>
+			<div class="closeSettingDiv">
+				<input type="image" src='resources/buttonClose.svg' class='menuButton'
+					onclick='rockDiceClosePadDiv();' />
+			</div>
+			<div class='maxWidth16' id='padListContent'>
+				<p>pad 1</p>
+				<p>pad 2</p>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div class="showUndoDiv">
+			<input type="image" src='resources/buttonUndo.svg' class='menuButton' onclick='rockDiceClickUndo();' />
+		</div>
+		<div id='menuDiv'>
+			<input type="image" src='resources/buttonShare.svg' id='menuShareButton' class='menuButton'
+				onclick='rockDiceClickShare();' />
+			<input type="image" src='resources/midilogo.svg' id='menuMIDIButton' class='menuButton'
+				onclick='rockDiceClickMIDIExport();' />
+			<input type="image" src='resources/buttonWav.svg' id='menuRecordingButton' class='menuButton'
+				onclick='rockDiceClickStartRecord();' />
+			<input type="image" src='resources/buttonText.svg' id='menuProgChordButton' class='menuButton'
+				onclick='rockDiceClickProgPrompt();' />
+		</div>
+		<div id='diceDiv'>
+			<div id='startGenRow'>
+				<input type="image" src='resources/buttonPlay.svg' id='menuPlayButton' class='diceSubStart'
+					onclick='rockDiceClickPlay();' />
+				<input type="image" src='resources/buttonDiceFree.svg' id='diceStart' class='diceStart'
+					onclick='rockDicePlayRandom();' />
+				<input type="image" src='resources/buttonEdit.svg' id='menuOptionsButton' class='diceSubStart'
+					onclick='rockDiceClickOptions();' />
+			</div>
+			<div class="curChordProgTitle">
+				<div id="progNameRow">G, Em, C, D</div>
+			</div>
+			<div id='progSliderRow'>
+				<input type="range" min="0" max="999" value="0" class="progSlider" id='sliderProgression'
+					onChange='rockDiceProgressionChanged();'>
+			</div>
+			<div id='genControlsRow'>
+				<svg version="1.1" class='diceButton' id='svgdrums' viewBox="0 0 512 512" height="512" width="512">
+					<path id='drumColor' d=" M 8 256 A 248 248 200 1 1 256 504"
+						style="fill:none;stroke:#fff;stroke-width:16;" />
+					<g id='roundDrums'>
+						<circle cx="256" cy="256" r="220" style="fill:none;stroke:#ffffff;stroke-width:16;" />
+						<rect y="256" x="32" height="16" width="220" style="fill:#ffffff;stroke-width:0;" />
+						<text style="font-size:72px;fill:#ffffff;stroke:none;" x="72" y="240">drums</text>
+					</g>
+				</svg><svg version="1.1" class='diceButton' id='svgbass' viewBox="0 0 512 512" height="512" width="512">
+					<path id='bassColor' d=" M 8 256 A 248 248 200 1 1 256 504"
+						style="fill:none;stroke:#fff;stroke-width:16;" />
+					<g id='roundBass'>
+						<circle cx="256" cy="256" r="220" style="fill:none;stroke:#ffffff;stroke-width:16;" />
+						<rect y="256" x="32" height="16" width="220" style="fill:#ffffff;stroke-width:0;" />
+						<text style="font-size:72px;fill:#ffffff;stroke:none;" x="72" y="240">bass</text>
+					</g>
+				</svg>
+				<svg version="1.1" class='diceButton' id='svglead' viewBox="0 0 512 512" height="512" width="512">
+					<path id='leadColor' d=" M 8 256 A 248 248 200 1 1 256 504"
+						style="fill:none;stroke:#fff;stroke-width:16;" />
+					<g id='roundLead'>
+						<circle cx="256" cy="256" r="220" style="fill:none;stroke:#ffffff;stroke-width:16;" />
+						<rect y="256" x="32" height="16" width="220" style="fill:#ffffff;stroke-width:0;" />
+						<text style="font-size:72px;fill:#ffffff;stroke:none;" x="72" y="240">lead</text>
+					</g>
+				</svg><svg version="1.1" class='diceButton' id='svgpad' viewBox="0 0 512 512" height="512" width="512">
+					<path id='padColor' d=" M 8 256 A 248 248 200 1 1 256 504"
+						style="fill:none;stroke:#fff;stroke-width:16;" />
+					<g id='roundPad'>
+						<circle cx="256" cy="256" r="220" style="fill:none;stroke:#ffffff;stroke-width:16;" />
+						<rect y="256" x="32" height="16" width="220" style="fill:#ffffff;stroke-width:0;" />
+						<text style="font-size:72px;fill:#ffffff;stroke:none;" x="72" y="240">pad</text>
+					</g>
+				</svg>
+			</div>
+			<div class='menuStub'>&nbsp;</div>
+		</div>
+	</div>
+	<div id="alertDiv">
+		<div id="alertBg">
+			<div id="alertText">Wait...</div>
+			<div id="alertLine">
+				<div id="alertTime"></div>
+			</div>
+		</div>
+	</div>
+	<svg xmlns="http://www.w3.org/2000/svg">
+		<filter id="shadowline" x="0" y="0">
+			<feOffset result="offOut" in="SourceAlpha" dx="1" dy="3" />
+			<feGaussianBlur result="blurOut" in="offOut" stdDeviation="1" />
+			<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+		</filter>
+	</svg>
+	<script type='text/javascript'>
+		console.log('init v3.01');
+		uiMode = 'web';
+		rockDiceInitUI();
+	</script>
+</body>
+
+</html>

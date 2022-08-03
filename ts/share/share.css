@@ -1,0 +1,54 @@
+:root {
+	--mode-colorFree: #cc33bb;
+	--mode-colorAdv: #00aabb;
+	--mode-color: #00aabb;
+	--background-color: #000000;
+	--text-color: #ffffff;
+}
+
+a {
+	color: var(--text-color);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--mode-color);
+	text-decoration: none;
+}
+
+body {
+	padding: 0cm;
+	margin: 0cm;
+	background-color: var(--background-color);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-position: center;
+	font-size: 0.5cm;
+	font-family: 'Oswald', sans-serif;
+	color: var(--text-color);
+	user-select2: none;
+}
+
+#picDiv {
+	text-align: center;
+	width: 100%;
+}
+
+#picImg {
+	text-align: center;
+	width: 100%;
+}
+
+.sublink {
+	text-align: center;
+}
+
+.overDiv {
+	z-index: 10;
+	position: fixed;
+	text-align: center;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+}
