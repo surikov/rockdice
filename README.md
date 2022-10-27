@@ -4,11 +4,12 @@
 
 Автоматическое создание музыки по заданным параметрам.
 
-Start App launcher - https://surikov.github.io/rockdice/main.html
+- Start App launcher - https://surikov.github.io/rockdice/main.html
+- Source - https://github.com/surikov/rockdice
 
-Source - https://github.com/surikov/rockdice
+Используется Web Audio API, TypeScript, Android WebView, таблично-волновой синтез и элементарная теория музыки.
 
-
+---
 
 Содержание:
 
@@ -27,18 +28,62 @@ Source - https://github.com/surikov/rockdice
 
 # Описание работы
 
-В основном окне можно слайдером выбрать прогрессию.
-
-
 ![rockdiceweb.png](img/rockdiceweb.png)
+
+В основном окне можно слайдером выбрать прогрессию. Последовательность аккордов определяет настроение мелодии.
+Круглыми переключателями можно выбрать риффы для стандартных 4-х слоёв мелодии
+- Drums - задает ритм
+- Bass - гармоническая основа и ритм
+- Lead - создаёт мелодический рисунок
+- Pad - контрапункт, протяжные ноты показывающие функцию аккорда
+По голубой кнопке с игральным кубиком выбираются рандомные значения.
+
+Приложение делает модуляцию выбранных фрагментов под заданные аккорды. Если покрутить переключатели и прослушать несколько мелодий, можно убедиться что при любом сочетании аккордов и инструментов музыка получается вполне "человеческое".
 
 ## Похожие проекты
 
+Встроенные функции автогенерации аранжировок появились ещё в первых синтезаторах. Пример исполнения на Cassio MT-100 из 89-х прошлого века: https://www.youtube.com/watch?v=Aepm6V4yvhw
+
+Современное приложение Captain Plugins Epic, подойдёт только профессионалам: https://www.youtube.com/watch?v=ZuB_t1DBwp8
+
+Web-приложение от BandLab, никаких настроек не поддерживает, просто генерирует мелодии в одном стиле: https://www.youtube.com/watch?v=EDRPy8KtY0c
+
 ## Настройки
+
+По кнопке с шестерёнкой открывается окно настроек.
+Можно редактировать громкость по слоям, скорость, менять аккорды, транспонировать, выбирать риффы:
+
+![rockdiceopt.png](img/rockdiceopt.png)
 
 ## История
 
+Возможность отменить прошлое действие и вернуться в предидущее состояние это типовое требование для любых приложений.
+По кнопке с иконкой Undo (справа вверху) открывается окно с историей подбора мелодий:
+
+![rockdiceundo.png](img/rockdiceundo.png)
+
 ## Публикация и экспорт
+
+Как и любое музыкальное приложение, RockDice позволяет экспортировать созданную мелодию в MIDI-файл или Wav-файл (кнопки в нижней панели).
+Полученные файлы можно редактировать в других музыкальных приложениях.
+Пример треков импортированных в BandLab MixEditor (любой трек можно форкнуть и открыть в редакторе):
+
+https://www.bandlab.com/sss1024/tracks
+
+![bandlabtracks.png](img/bandlabtracks.png)
+
+### Совместная работа
+
+Ссылка на мелодию открывается в приложении точно в том виде как её отправил автор.
+
+По кнопке со стандартной иконкой Share открывается окно предпросмотра. В нём
+можно отослать ссылку на мелодию через e-mail, мессенджер или соц. сети:
+
+![rockdiceshare.png](img/rockdiceshare.png)
+
+В большинстве соц. сетей ссылка корректно распознаётся с описанием и изображением выбранных инструментов:
+
+![rockdicevk.png](img/rockdicevk.png)
 
 # Описание реализации
 
@@ -54,39 +99,4 @@ Source - https://github.com/surikov/rockdice
 
 ## Android
 
-[test](#test)
-
-Главное окно
-
-
-BandLab Songstarter
-https://www.youtube.com/watch?v=EDRPy8KtY0c
-
-Cassio
-https://www.youtube.com/watch?v=Aepm6V4yvhw
-
-Настройки
-![rockdiceopt.png](img/rockdiceopt.png)
-
-Выбор фрагмента
-![rockdicedrums.png](img/rockdicedrums.png)
-
-Выбор прогрессии
-![rockdicechords.png](img/rockdicechords.png)
-
-История
-![rockdiceundo.png](img/rockdiceundo.png)
-
-Экспорт
-![rockdiceshare.png](img/rockdiceshare.png)
-
-Публикация
-![rockdicevk.png](img/rockdicevk.png)
-
-
-https://www.bandlab.com/sss1024/tracks
-![bandlabtracks.png](img/bandlabtracks.png)
-
-# test
-kkkk
 
