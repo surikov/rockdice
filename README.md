@@ -4,8 +4,8 @@
 
 Автоматическое создание музыки по заданным параметрам.
 
-- Start App launcher - https://surikov.github.io/rockdice/main.html
-- Source - https://github.com/surikov/rockdice
+- Start App launcher - (https://surikov.github.io/rockdice/main.html)[https://surikov.github.io/rockdice/main.html]
+- Source - (https://github.com/surikov/rockdice)[https://github.com/surikov/rockdice]
 
 Используется Web Audio API, TypeScript, Android WebView, таблично-волновой синтез и элементарная теория музыки.
 
@@ -42,11 +42,11 @@
 
 ## Похожие проекты
 
-Встроенные функции автогенерации аранжировок появились ещё в первых синтезаторах. Пример исполнения на Cassio MT-100 из 89-х прошлого века: https://www.youtube.com/watch?v=Aepm6V4yvhw
+Встроенные функции автогенерации аранжировок появились ещё в первых синтезаторах. Пример исполнения на Cassio MT-100 из 80-х прошлого века: (https://www.youtube.com/watch?v=Aepm6V4yvhw)[https://www.youtube.com/watch?v=Aepm6V4yvhw]
 
-Современное приложение Captain Plugins Epic, подойдёт только профессионалам: https://www.youtube.com/watch?v=ZuB_t1DBwp8
+Современное приложение Captain Plugins Epic, подойдёт только профессионалам: (https://www.youtube.com/watch?v=ZuB_t1DBwp8)[https://www.youtube.com/watch?v=ZuB_t1DBwp8]
 
-Web-приложение от BandLab, никаких настроек не поддерживает, просто генерирует мелодии в одном стиле: https://www.youtube.com/watch?v=EDRPy8KtY0c
+Web-приложение от BandLab, никаких настроек не поддерживает, просто генерирует мелодии в одном стиле: (https://www.youtube.com/watch?v=EDRPy8KtY0c)[https://www.youtube.com/watch?v=EDRPy8KtY0c]
 
 ## Настройки
 
@@ -68,7 +68,7 @@ Web-приложение от BandLab, никаких настроек не по
 Полученные файлы можно редактировать в других музыкальных приложениях.
 Пример треков импортированных в BandLab MixEditor (любой трек можно форкнуть и открыть в редакторе):
 
-https://www.bandlab.com/sss1024/tracks
+(https://www.bandlab.com/sss1024/tracks)[https://www.bandlab.com/sss1024/tracks]
 
 ![bandlabtracks.png](img/bandlabtracks.png)
 
