@@ -1,3 +1,8 @@
+# rockdice
+
+- Start App launcher - https://surikov.github.io/rockdice/main.html
+- Source - https://github.com/surikov/rockdice
+
 # Автогенерация музыки без AI
 
 ![bender.png](img/bender.png)
@@ -50,7 +55,7 @@ https://www.youtube.com/watch?v=Aepm6V4yvhw
 
 https://www.youtube.com/watch?v=ZuB_t1DBwp8
 
-Web-приложение от BandLab, никаких настроек не поддерживает, просто генерирует мелодии в одном стиле: 
+Web-приложение BandLab SongStarter, никаких настроек не поддерживает, просто генерирует мелодии в одном стиле: 
 
 https://www.youtube.com/watch?v=EDRPy8KtY0c
 
@@ -103,7 +108,38 @@ https://www.bandlab.com/sss1024/tracks
 
 ## Воспроизведение звука
 
+Для воспроизведения звука используется библиотека WebAudioFont:
+
+https://github.com/surikov/webaudiofont
+
+В библиотеке содержатся более 2000 оцифрованных инструментов и основные фильтры для обработки звука:
+
+- 10-полосный эквалайзер для настройки тембра
+- эхо для объёмного звучания
+- динамический компрессор для выделения голосов
+
+Документация:
+
+https://surikov.github.io/webaudiofont/npm/src/docs/index.html
+
 ## Модуляция фрагментов
+
+Для выбранных (или введённых вручную) аккордов в функции extractMode вычисляется тоника и лад, см.
+
+https://github.com/surikov/rockdice/blob/main/ts/code/zvoogharmonizer.ts#L1156
+
+Для воспроизведения музыки в проект добавлено около двухсот риффов с разными инструментами, их можно посмотреть в папке
+
+https://github.com/surikov/rockdice/tree/main/patterns
+
+Каждый паттерн кроме нот также содержит описание лада и тоники.
+
+Выбранные риффы в функции  morphSchedule транспонируются в тонику выбранных аккордов и проводится модуляция в лад аккордовой прогрессии, см.
+
+https://github.com/surikov/rockdice/blob/main/ts/code/zvoogharmonizer.ts#L377
+
+- Транспонирование мелодии - перенос всех нот на равное количество полутонов. По-простому - сделать звук выше или ниже.
+- Модуляция мелодии сдвиг определённых ступеней лада. По-простому - из минора в мажор и т.п.
 
 ## Специфика инструментов
 
