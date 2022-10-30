@@ -9,8 +9,9 @@
 
 Автоматическое создание музыки по заданным параметрам.
 
-- Start App launcher - https://surikov.github.io/rockdice/main.html
-- Source - https://github.com/surikov/rockdice
+- Открыть в браузере - https://surikov.github.io/rockdice/main.html
+- Исходники - https://github.com/surikov/rockdice
+- Андроидная версия - https://play.google.com/store/apps/details?id=rockdice.chord.progression
 
 Используется Web Audio API, TypeScript, Android WebView, таблично-волновой синтез и элементарная теория музыки.
 
@@ -204,8 +205,8 @@ https://play.google.com/store/apps/details?id=rockdice.chord.progression
 
 ```
 let blob: Blob = new Blob([dataview], { type: 'audio/wav' });
-var ourl = URL.createObjectURL(blob);
-var a = document.createElement("a");
+let ourl = URL.createObjectURL(blob);
+let a = document.createElement("a");
 document.body.appendChild(a);
 a.href = ourl;
 a.download = 'rockdice';
