@@ -187,4 +187,4 @@ https://github.com/surikov/rockdice/blob/main/server/share.php
 
 https://play.google.com/store/apps/details?id=rockdice.chord.progression
 
-![googleplay.png](img/googleplay.png)
+![android.png](img/android.png)
