@@ -145,17 +145,43 @@ https://github.com/surikov/rockdice/blob/main/ts/code/zvoogharmonizer.ts#L377
 
 При воспроизведении музыкальныз фрагментов учитывается специфика исполнения на конкретных инструментах. Наример:
 
-при игре на гитаре с дисторшном обычно используют как игру на открытых струнах, так и игру на прижатых струнах (Palm Mute). Т.е. инструемент один, но для реалистичного звучания необходимо два отдельных набора сэмплов [для открытых](https://surikov.github.io/webaudiofontdata/sound/0300_LesPaul_sf2.html) и [приглушенных](https://surikov.github.io/webaudiofontdata/sound/0290_LesPaul_sf2.html) струн
-
-на аккустической гитаре удары по струнам вниз и вверх ощутимо различаются, а наборы нот похожих аккордов (например G и Gm) могут зажиматься на совершенно разных ладах
-
-и т.п.
+- при игре на гитаре с дисторшном обычно используют как игру на открытых струнах, так и игру на прижатых струнах (Palm Mute). Т.е. инструемент один, но для реалистичного звучания необходимо два отдельных набора сэмплов [для открытых](https://surikov.github.io/webaudiofontdata/sound/0300_LesPaul_sf2.html) и [приглушенных](https://surikov.github.io/webaudiofontdata/sound/0290_LesPaul_sf2.html) струн
+- на аккустической гитаре удары по струнам вниз и вверх ощутимо различаются, см. [пример](https://surikov.github.io/webaudiofont/examples/strum.html)
+- наборы нот похожих аккордов (например G и Gm) могут зажиматься на совершенно разных ладах, это нужно учитывать при модуляции фрагментов
+- и т.п.
 
 В результате получается сделать звучание сгенерированной музыки менее однообразным.
 
 ## Хранение состояний
 
+Выбранные аккорды, фрагменты и другие настройки сохраняются в localStorage брайзера, см. [readObjectFromlocalStorage](https://github.com/surikov/rockdice/blob/main/ts/code/zvoogapp.ts#L2376).
+В результате при новом открытии приложении его состояние восстанавливается в том же виде как и в последнем сеансе работы.
+
+При создании ссылки для публикации все данные кодируются () в длинный-предлинный URL, пример
+
+https://mzxbox.ru/RockDice/share.php?seed=%7B%22drumsSeed%22%3A21%2C%22bassSeed%22%3A12%2C%22leadSeed%22%3A6%2C%22padSeed%22%3A12%2C%22drumsVolume%22%3A111%2C%22bassVolume%22%3A99%2C%22leadVolume%22%3A66%2C%22padVolume%22%3A77%2C%22chords%22%3A%5B%22Cm%22%2C%222%2F1%22%2C%22Ebm%22%2C%222%2F1%22%5D%2C%22tempo%22%3A130%2C%22mode%22%3A%22Ionian%22%2C%22tone%22%3A%22D%23%22%2C%22version%22%3A%22v2.83%22%2C%22comment%22%3A%22%22%2C%22ui%22%3A%22web%22%7D
+
+
 ## Разметка ссылок
+
+Публикуемые ссылки соответвуют протоколам Open Graph и Twitter Cards.
+
+Эти протоколы поддерживаются больншинством движков соц. сетей. По сути это требование к страницы на которую ведёт ссылка содержать её описание и картинку предпросмотра.
+
+Картинка и страница для публикации формируются динамически обычным php-скриптом, см.
+
+https://github.com/surikov/rockdice/blob/main/server/share.php
+
+вся информация для предпросмотра в тегах
+
+```
+<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="<?php echo $line; ?>" />
+<meta property="og:url" content="https://mzxbox.ru/RockDice/share.php?seed=<?php echo $encoded; ?>" />
+<meta property="og:image" content="https://mzxbox.ru/RockDice/picture.php?drums=<?php echo $drums; ?>&prog=<?php echo urlencode($line); ?>&bass=<?php echo $bass; ?>&lead=<?php echo $lead; ?>&pad=<?php echo $pad; ?>" />
+```
+
+Скрипты выложены на обычный хостинг стоимостью примерно 200р в месяц.
 
 ## Android
 
