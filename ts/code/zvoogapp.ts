@@ -26,7 +26,7 @@ type StateSeed = {
 
 class ZvoogApp {
 
-	versionCode: string = 'v2.83';
+	versionCode: string = 'v2.84';
 	stateName: string = 'lastSaved';
 	counterName: string = 'num';
 	undoName: string = 'historyList';
@@ -865,6 +865,9 @@ class ZvoogApp {
 			if (chordName != '-' && chords.length < 16) {
 				chords.push(chordName);
 			}
+		}
+		if (chords.length == 1) {
+			chords.push(chords[0]);
 		}
 		if (chords.length > 1) {
 			//console.log(chords);
@@ -2296,15 +2299,41 @@ class ZvoogApp {
 			});
 		});
 	}
-
+	showChordInfo(name: string) {
+		this.cancelPlay();
+		console.log('info', name);
+		let chordInfoTitle: HTMLElement | null = document.getElementById('chordInfoTitle');
+		if (chordInfoTitle) {
+			chordInfoTitle.innerHTML = name;
+		}
+		rockDiceShowChord();
+	}
 	fitCHordsTitle() {
 		let chords: string[] = this.simplifiedChords(this.schedule.harmony);
-		try {
-			(document.getElementById('progNameRow') as any).innerHTML = chords.join(', ');
+		let progNameRow: HTMLElement | null = document.getElementById('progNameRow');
+		if (progNameRow) {
+			//progNameRow.innerHTML = chords.join(' - ');
+			progNameRow.innerHTML = "";
+			let me = this;
+			for (let ii = 0; ii < chords.length; ii++) {
+				var a = document.createElement('a');
+				a.textContent = chords[ii];
+				a.onclick = function () {
+					me.showChordInfo(chords[ii]);
+					//console.log('click', chords[ii]);
+				};
+				if (ii > 0) {
+					progNameRow.append(' - ');
+				}
+				progNameRow.appendChild(a);
+			}
+		}
+		/*try {
+			(document.getElementById('progNameRow') as any).innerHTML = chords.join(' - ');
 			//console.log(this.schedule.harmony.progression);
 		} catch (xx) {
 			console.log(xx);
-		}
+		}*/
 	}
 
 	waitLoadPath: string = '';

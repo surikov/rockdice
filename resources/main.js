@@ -440,6 +440,13 @@ function rockDiceProgressionChanged() {
         });
     });
 }
+function rockDiceShowChord() {
+    zapp.refitUndoList();
+    setDivStyleDisplay('chordInfoDiv', 'flex');
+}
+function rockDiceCloseChordInfoDiv() {
+    setDivStyleDisplay('chordInfoDiv', 'none');
+}
 function rockDiceClickUndo() {
     //console.log('rockDiceClickUndo');
     zapp.refitUndoList();
@@ -954,6 +961,7 @@ function setDivStyleDisplay(id, style) {
     var e = document.getElementById(id);
     if (e) {
         e.style.display = style;
+        e.scrollTop = 0;
     }
 }
 function calcChordDown(fullName) {
@@ -5810,7 +5818,7 @@ var ZvoogTicker = /** @class */ (function () {
 ;
 var ZvoogApp = /** @class */ (function () {
     function ZvoogApp() {
-        this.versionCode = 'v2.83';
+        this.versionCode = 'v2.84';
         this.stateName = 'lastSaved';
         this.counterName = 'num';
         this.undoName = 'historyList';
@@ -6678,6 +6686,9 @@ var ZvoogApp = /** @class */ (function () {
             if (chordName != '-' && chords.length < 16) {
                 chords.push(chordName);
             }
+        }
+        if (chords.length == 1) {
+            chords.push(chords[0]);
         }
         if (chords.length > 1) {
             //console.log(chords);
@@ -8111,15 +8122,45 @@ var ZvoogApp = /** @class */ (function () {
             });
         });
     };
+    ZvoogApp.prototype.showChordInfo = function (name) {
+        this.cancelPlay();
+        console.log('info', name);
+        var chordInfoTitle = document.getElementById('chordInfoTitle');
+        if (chordInfoTitle) {
+            chordInfoTitle.innerHTML = name;
+        }
+        rockDiceShowChord();
+    };
     ZvoogApp.prototype.fitCHordsTitle = function () {
         var chords = this.simplifiedChords(this.schedule.harmony);
-        try {
-            document.getElementById('progNameRow').innerHTML = chords.join(', ');
+        var progNameRow = document.getElementById('progNameRow');
+        if (progNameRow) {
+            //progNameRow.innerHTML = chords.join(' - ');
+            progNameRow.innerHTML = "";
+            var me_4 = this;
+            var _loop_1 = function (ii) {
+                a = document.createElement('a');
+                a.textContent = chords[ii];
+                a.onclick = function () {
+                    me_4.showChordInfo(chords[ii]);
+                    //console.log('click', chords[ii]);
+                };
+                if (ii > 0) {
+                    progNameRow.append(' - ');
+                }
+                progNameRow.appendChild(a);
+            };
+            var a;
+            for (var ii = 0; ii < chords.length; ii++) {
+                _loop_1(ii);
+            }
+        }
+        /*try {
+            (document.getElementById('progNameRow') as any).innerHTML = chords.join(' - ');
             //console.log(this.schedule.harmony.progression);
-        }
-        catch (xx) {
+        } catch (xx) {
             console.log(xx);
-        }
+        }*/
     };
     ZvoogApp.prototype.waitLoadImportedZvoogSchedule = function (//filePath: string, 
     app, afterDone) {
