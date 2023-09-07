@@ -102,7 +102,7 @@ class ZvoogHarmonizer {
 			, effects: [
 				{
 					pluginEffect: null, kind: "echo", initial: "", parameters: [
-						{ points: [{ skipMeasures: 0, skip384: 0, velocity: 0.22 * 119 }] }//reverberator';
+						{ points: [{ skipMeasures: 0, skip384: 0, velocity: 0.11 * 119 }] }//reverberator';
 						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.55 * 119 }] }//threshold';
 						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.99 * 119 }] }//knee';
 						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.66 * 119 }] }//ratio';

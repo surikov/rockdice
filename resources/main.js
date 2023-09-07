@@ -1566,7 +1566,7 @@ var ZvoogHarmonizer = /** @class */ (function () {
             effects: [
                 {
                     pluginEffect: null, kind: "echo", initial: "", parameters: [
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.22 * 119 }] } //reverberator';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.11 * 119 }] } //reverberator';
                         ,
                         { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.55 * 119 }] } //threshold';
                         ,
