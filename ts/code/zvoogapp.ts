@@ -734,7 +734,7 @@ class ZvoogApp {
 		let progN = Math.floor(Math.random() * trackProgressions.length);
 		//let variantN = 0;
 		let tempo = 130;
-		let compressor = 119;
+		//let compressor = 119;
 
 		this.selectedDrums = drumN;
 		this.selectedBass = bassN;
@@ -757,14 +757,16 @@ class ZvoogApp {
 		let tp: TrackProgression = trackProgressions[progN];
 		if (tp.jspath) {
 			me.doForCachedSchedule(tp.jspath, (sch: ZvoogSchedule) => {
-				me.setTracksByRandom(sch.harmony, compressor);
+				me.setTracksByRandom(sch.harmony);//, compressor);
 			});
 		} else {
 			if (tp.harmony) {
-				me.setTracksByRandom(tp.harmony, compressor);
+				me.setTracksByRandom(tp.harmony);//, compressor);
 			}
 		}
-
+		//me.schedule.title='Random v'+Math.round(Math.random()*1000);
+		//me.schedule.effects[0]={};
+		console.log('chooseRandomSong',me.schedule);
 	}
 	promptProgression() {
 		let lastTypedProg = zapp.readTextFromlocalStorage(zapp.lastTyped);
@@ -907,10 +909,10 @@ class ZvoogApp {
 			});
 		}
 	}
-	setTracksByRandom(harmony: ZvoogProgression, compressor: number) {
+	setTracksByRandom(harmony: ZvoogProgression){//}, compressor: number) {
 		let me = this;
 		this.schedule.harmony = JSON.parse(JSON.stringify(harmony)) as ZvoogProgression;
-		this.schedule.effects[0].parameters[6].points[0].velocity = compressor;
+		//this.schedule.effects[0].parameters[6].points[0].velocity = compressor;
 		for (let i = 0; i < this.schedule.measures.length; i++) {
 			this.schedule.measures[i].tempo = this.selectedTempo;
 		}

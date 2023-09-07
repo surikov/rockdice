@@ -1554,8 +1554,9 @@ var ZvoogHarmonizer = /** @class */ (function () {
         };
     };
     ZvoogHarmonizer.prototype.createEmptyBaseSchedule = function () {
+        console.log('createEmptyBaseSchedule');
         var schedule = {
-            title: 'Base',
+            title: 'Base 4 tracks',
             tracks: [
                 { title: 'Drums', voices: [], effects: [{ pluginEffect: null, kind: "gain", initial: "", parameters: [{ points: [{ skipMeasures: 0, skip384: 0, velocity: 111 }] }] }] },
                 { title: 'Bass', voices: [], effects: [{ pluginEffect: null, kind: "gain", initial: "", parameters: [{ points: [{ skipMeasures: 0, skip384: 0, velocity: 99 }] }] }] },
@@ -1565,19 +1566,19 @@ var ZvoogHarmonizer = /** @class */ (function () {
             effects: [
                 {
                     pluginEffect: null, kind: "echo", initial: "", parameters: [
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.25 * 119 }] } //reverberator';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.22 * 119 }] } //reverberator';
                         ,
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.65 * 119 }] } //threshold';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.55 * 119 }] } //threshold';
                         ,
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.9 * 119 }] } //knee';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.99 * 119 }] } //knee';
                         ,
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.33 * 119 }] } //ratio';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.66 * 119 }] } //ratio';
                         ,
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.02 * 119 }] } //attack';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.01 * 119 }] } //attack';
                         ,
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.125 * 119 }] } //release';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.25 * 119 }] } //release';
                         ,
-                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.0 * 119 }] } //compression';
+                        { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.99 * 119 }] } //compression';
                     ]
                 },
                 {
@@ -4222,6 +4223,7 @@ function fromRiffShare(riffurl) {
             }
         }
     }
+    console.log('echo/compressor');
     convertedSchedule.effects.push({
         pluginEffect: null, kind: "echo", initial: "", parameters: [
             { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.25 * 119 }] } //reverberator';
@@ -6571,7 +6573,7 @@ var ZvoogApp = /** @class */ (function () {
         var progN = Math.floor(Math.random() * trackProgressions.length);
         //let variantN = 0;
         var tempo = 130;
-        var compressor = 119;
+        //let compressor = 119;
         this.selectedDrums = drumN;
         this.selectedBass = bassN;
         this.selectedLead = leadN;
@@ -6590,14 +6592,17 @@ var ZvoogApp = /** @class */ (function () {
         var tp = trackProgressions[progN];
         if (tp.jspath) {
             me.doForCachedSchedule(tp.jspath, function (sch) {
-                me.setTracksByRandom(sch.harmony, compressor);
+                me.setTracksByRandom(sch.harmony); //, compressor);
             });
         }
         else {
             if (tp.harmony) {
-                me.setTracksByRandom(tp.harmony, compressor);
+                me.setTracksByRandom(tp.harmony); //, compressor);
             }
         }
+        //me.schedule.title='Random v'+Math.round(Math.random()*1000);
+        //me.schedule.effects[0]={};
+        console.log('chooseRandomSong', me.schedule);
     };
     ZvoogApp.prototype.promptProgression = function () {
         var lastTypedProg = zapp.readTextFromlocalStorage(zapp.lastTyped);
@@ -6727,10 +6732,10 @@ var ZvoogApp = /** @class */ (function () {
             });
         }
     };
-    ZvoogApp.prototype.setTracksByRandom = function (harmony, compressor) {
+    ZvoogApp.prototype.setTracksByRandom = function (harmony) {
         var me = this;
         this.schedule.harmony = JSON.parse(JSON.stringify(harmony));
-        this.schedule.effects[0].parameters[6].points[0].velocity = compressor;
+        //this.schedule.effects[0].parameters[6].points[0].velocity = compressor;
         for (var i = 0; i < this.schedule.measures.length; i++) {
             this.schedule.measures[i].tempo = this.selectedTempo;
         }

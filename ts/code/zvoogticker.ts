@@ -498,6 +498,7 @@ class ZvoogTicker {
 	}
 	preDestinationNode: AudioNode;// = this.masterNode;
 	prepareProject(project: ZvoogSchedule, audioCtxt: AudioContext, target: AudioNode) {
+		
 		this.scheduleDefinition = project;
 		this.audioContext = audioCtxt;
 		this.masterNode = this.audioContext.createGain();

@@ -90,8 +90,9 @@ class ZvoogHarmonizer {
 	}
 
 	createEmptyBaseSchedule(): ZvoogSchedule {
+		console.log('createEmptyBaseSchedule');
 		let schedule: ZvoogSchedule = {
-			title: 'Base',
+			title: 'Base 4 tracks',
 			tracks: [
 				{ title: 'Drums', voices: [], effects: [{ pluginEffect: null, kind: "gain", initial: "", parameters: [{ points: [{ skipMeasures: 0, skip384: 0, velocity: 111 }] }] }] }
 				, { title: 'Bass', voices: [], effects: [{ pluginEffect: null, kind: "gain", initial: "", parameters: [{ points: [{ skipMeasures: 0, skip384: 0, velocity: 99 }] }] }] }
@@ -101,13 +102,13 @@ class ZvoogHarmonizer {
 			, effects: [
 				{
 					pluginEffect: null, kind: "echo", initial: "", parameters: [
-						{ points: [{ skipMeasures: 0, skip384: 0, velocity: 0.25 * 119 }] }//reverberator';
-						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.65 * 119 }] }//threshold';
-						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.9 * 119 }] }//knee';
-						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.33 * 119 }] }//ratio';
-						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.02 * 119 }] }//attack';
-						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.125 * 119 }] }//release';
-						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.0 * 119 }] }//compression';
+						{ points: [{ skipMeasures: 0, skip384: 0, velocity: 0.22 * 119 }] }//reverberator';
+						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.55 * 119 }] }//threshold';
+						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.99 * 119 }] }//knee';
+						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.66 * 119 }] }//ratio';
+						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.01 * 119 }] }//attack';
+						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.25 * 119 }] }//release';
+						, { points: [{ skipMeasures: 0, skip384: 0, velocity: 0.99 * 119 }] }//compression';
 					]
 				}
 				, {
