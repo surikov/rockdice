@@ -45,8 +45,10 @@
 			<div class='maxWidth16'>
 				<h4 id='titleVersion'>v2.01</h4>
 				<h1>Tempo</h1>
-				<p><input type="range" min="80" max="180" value="130" class="optionsSlider" id='tempoSlider'
-						onChange='rockDiceTempoSliderChanged();'></p>
+				<p><nobr><input type="range" min="80" max="180" value="130" class="optionsSlider" id='tempoSlider'
+                        onChange='rockDiceTempoSliderChanged();'>
+                        <a onclick='rockDiceTempoPrompt();'><span id='tempoNum'>123</span></a>
+                </nobr></p>
 				<h1>Tracks</h1>
 				<div class='trackOptRow'>
 					<div class='trackNameSliderPart'>
@@ -297,7 +299,9 @@
 			<div class='maxWidth16'>
 				<h1 id='chordInfoTitle'>#</h1>
 				<div class='maxWidth16' id='chordInfoContent'>
-					
+					<svg id='pianoKeysSVG' width="100" height="100">
+                        <rect x='12' y='6' width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+                    </svg>
 				</div>
 			</div>
 		</div>

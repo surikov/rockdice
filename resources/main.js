@@ -706,6 +706,36 @@ function reColorCell(num, color) {
         e.style.color = color;
     }
 }
+function rockDiceTempoPrompt() {
+    console.log('rockDiceTempoPrompt');
+    var nn = prompt('Tempo', '' + zapp.selectedTempo);
+    if (nn) {
+        try {
+            var newTempo = Math.round(parseInt(nn));
+            if (newTempo) {
+                if (newTempo < 80)
+                    newTempo = 80;
+                if (newTempo > 180)
+                    newTempo = 180;
+                zapp.setTempo(newTempo);
+                rockDiceUpdateTempoNumFromSong();
+            }
+        }
+        catch (xx) {
+            console.log(xx);
+        }
+        var e = document.getElementById('tempoSlider');
+        if (e) {
+            e.value = '' + zapp.selectedTempo;
+        }
+    }
+}
+function rockDiceUpdateTempoNumFromSong() {
+    var e = document.getElementById('tempoNum');
+    if (e) {
+        e.innerHTML = '' + zapp.selectedTempo;
+    }
+}
 function rockDiceTempoSliderChanged() {
     //zapp.storeChangedStateAndCheck();
     zapp.pushUndoState(zapp.createCurrentState(), zapp.undoList);
@@ -715,6 +745,7 @@ function rockDiceTempoSliderChanged() {
         if (e) {
             zapp.setTempo(parseInt(e.value));
             rockDiceRestartOrStart();
+            rockDiceUpdateTempoNumFromSong();
         }
     });
 }
@@ -5820,7 +5851,7 @@ var ZvoogTicker = /** @class */ (function () {
 ;
 var ZvoogApp = /** @class */ (function () {
     function ZvoogApp() {
-        this.versionCode = 'v2.84';
+        this.versionCode = 'v2.85';
         this.stateName = 'lastSaved';
         this.counterName = 'num';
         this.undoName = 'historyList';
@@ -8107,6 +8138,7 @@ var ZvoogApp = /** @class */ (function () {
         if (e) {
             e.value = '' + me.selectedTempo;
         }
+        rockDiceUpdateTempoNumFromSong();
         me.setBassPattern(me.selectedBass, function () {
             me.setDrumPattern(me.selectedDrums, function () {
                 me.setLeadPattern(me.selectedLead, function () {
@@ -8133,6 +8165,18 @@ var ZvoogApp = /** @class */ (function () {
         var chordInfoTitle = document.getElementById('chordInfoTitle');
         if (chordInfoTitle) {
             chordInfoTitle.innerHTML = name;
+        }
+        var chordInfoContent = document.getElementById('chordInfoContent');
+        if (chordInfoContent) {
+            while (chordInfoContent.firstChild) {
+                chordInfoContent.removeChild(chordInfoContent.firstChild);
+            }
+            var pPiano = document.createElement("p");
+            chordInfoContent.appendChild(pPiano);
+            var svgPiano = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svgPiano.setAttribute('width', '300');
+            svgPiano.setAttribute('height', '100');
+            pPiano.appendChild(svgPiano);
         }
         rockDiceShowChord();
     };
