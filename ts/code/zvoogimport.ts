@@ -231,6 +231,7 @@ function fromRiffShare(riffurl: string): ZvoogSchedule {
 			}
 		}
 	}
+	console.log('echo/compressor');
 	convertedSchedule.effects.push({
 		pluginEffect: null, kind: "echo", initial: "", parameters: [
 			{ points: [{ skipMeasures: 0, skip384: 0, velocity: 0.25 * 119 }] }//reverberator';

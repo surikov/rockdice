@@ -456,6 +456,18 @@ function rockDiceProgressionChanged() {
 	});
 
 }
+
+
+
+function rockDiceShowChord() {
+	zapp.refitUndoList();
+	setDivStyleDisplay('chordInfoDiv', 'flex');
+}
+function rockDiceCloseChordInfoDiv() {
+	setDivStyleDisplay('chordInfoDiv', 'none');
+}
+
+
 function rockDiceClickUndo() {
 	//console.log('rockDiceClickUndo');
 	zapp.refitUndoList();
@@ -1005,6 +1017,7 @@ function setDivStyleDisplay(id: string, style: string) {
 	let e: HTMLElement | null = document.getElementById(id);
 	if (e) {
 		e.style.display = style;
+		e.scrollTop=0;
 	}
 }
 function calcChordDown(fullName: string): string {

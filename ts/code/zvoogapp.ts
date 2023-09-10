@@ -26,7 +26,7 @@ type StateSeed = {
 
 class ZvoogApp {
 
-	versionCode: string = 'v2.83';
+	versionCode: string = 'v2.84';
 	stateName: string = 'lastSaved';
 	counterName: string = 'num';
 	undoName: string = 'historyList';
@@ -734,7 +734,7 @@ class ZvoogApp {
 		let progN = Math.floor(Math.random() * trackProgressions.length);
 		//let variantN = 0;
 		let tempo = 130;
-		let compressor = 119;
+		//let compressor = 119;
 
 		this.selectedDrums = drumN;
 		this.selectedBass = bassN;
@@ -757,14 +757,16 @@ class ZvoogApp {
 		let tp: TrackProgression = trackProgressions[progN];
 		if (tp.jspath) {
 			me.doForCachedSchedule(tp.jspath, (sch: ZvoogSchedule) => {
-				me.setTracksByRandom(sch.harmony, compressor);
+				me.setTracksByRandom(sch.harmony);//, compressor);
 			});
 		} else {
 			if (tp.harmony) {
-				me.setTracksByRandom(tp.harmony, compressor);
+				me.setTracksByRandom(tp.harmony);//, compressor);
 			}
 		}
-
+		//me.schedule.title='Random v'+Math.round(Math.random()*1000);
+		//me.schedule.effects[0]={};
+		console.log('chooseRandomSong',me.schedule);
 	}
 	promptProgression() {
 		let lastTypedProg = zapp.readTextFromlocalStorage(zapp.lastTyped);
@@ -866,6 +868,9 @@ class ZvoogApp {
 				chords.push(chordName);
 			}
 		}
+		if (chords.length == 1) {
+			chords.push(chords[0]);
+		}
 		if (chords.length > 1) {
 			//console.log(chords);
 			let harmony: ZvoogProgression = {
@@ -904,10 +909,10 @@ class ZvoogApp {
 			});
 		}
 	}
-	setTracksByRandom(harmony: ZvoogProgression, compressor: number) {
+	setTracksByRandom(harmony: ZvoogProgression){//}, compressor: number) {
 		let me = this;
 		this.schedule.harmony = JSON.parse(JSON.stringify(harmony)) as ZvoogProgression;
-		this.schedule.effects[0].parameters[6].points[0].velocity = compressor;
+		//this.schedule.effects[0].parameters[6].points[0].velocity = compressor;
 		for (let i = 0; i < this.schedule.measures.length; i++) {
 			this.schedule.measures[i].tempo = this.selectedTempo;
 		}
@@ -2296,15 +2301,41 @@ class ZvoogApp {
 			});
 		});
 	}
-
+	showChordInfo(name: string) {
+		this.cancelPlay();
+		console.log('info', name);
+		let chordInfoTitle: HTMLElement | null = document.getElementById('chordInfoTitle');
+		if (chordInfoTitle) {
+			chordInfoTitle.innerHTML = name;
+		}
+		rockDiceShowChord();
+	}
 	fitCHordsTitle() {
 		let chords: string[] = this.simplifiedChords(this.schedule.harmony);
-		try {
-			(document.getElementById('progNameRow') as any).innerHTML = chords.join(', ');
+		let progNameRow: HTMLElement | null = document.getElementById('progNameRow');
+		if (progNameRow) {
+			//progNameRow.innerHTML = chords.join(' - ');
+			progNameRow.innerHTML = "";
+			let me = this;
+			for (let ii = 0; ii < chords.length; ii++) {
+				var a = document.createElement('a');
+				a.textContent = chords[ii];
+				a.onclick = function () {
+					me.showChordInfo(chords[ii]);
+					//console.log('click', chords[ii]);
+				};
+				if (ii > 0) {
+					progNameRow.append(' - ');
+				}
+				progNameRow.appendChild(a);
+			}
+		}
+		/*try {
+			(document.getElementById('progNameRow') as any).innerHTML = chords.join(' - ');
 			//console.log(this.schedule.harmony.progression);
 		} catch (xx) {
 			console.log(xx);
-		}
+		}*/
 	}
 
 	waitLoadPath: string = '';
