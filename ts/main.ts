@@ -461,7 +461,7 @@ function rockDiceProgressionChanged() {
 
 
 function rockDiceShowChord() {
-    zapp.refitUndoList();
+    //zapp.refitUndoList();
     setDivStyleDisplay('chordInfoDiv', 'flex');
 }
 function rockDiceCloseChordInfoDiv() {

@@ -689,3 +689,26 @@ h1 {
 #menuShareButton{
 	filter:none;
 }
+
+.blackKey {
+	fill: #333;
+	stroke-width: 1;
+	stroke: #ccc
+}
+.whiteKey {
+	fill: #fff;
+	stroke-width: 1;
+	stroke: #ccc
+}
+.checkedKey {
+	fill: var(--mode-color);
+	stroke-width: 1;
+	stroke: #ccc
+}
+
+.fretLine {
+	fill: #333;
+}
+.stringLine {
+	fill: #ccc;
+}
