@@ -26,7 +26,7 @@ type StateSeed = {
 
 class ZvoogApp {
 
-	versionCode: string = 'v2.86';
+	versionCode: string = 'v2.87';
 	stateName: string = 'lastSaved';
 	counterName: string = 'num';
 	undoName: string = 'historyList';
@@ -36,6 +36,7 @@ class ZvoogApp {
 
 	ticker: ZvoogTicker;
 	schedule: ZvoogSchedule;
+	preSchedule: ZvoogSchedule;
 	harmonizer: ZvoogHarmonizer;
 	audioContext: AudioContext;
 
@@ -2315,7 +2316,7 @@ class ZvoogApp {
 	}
 	addFingerFret(fret: number, yy: number, svgChord: SVGSVGElement) {
 		if (fret > 0) {
-			svgChord.appendChild(this.svgRectangle(9 + 60 * fret - 66 / 2, yy + 8, 16, 16, 8, 'checkedKey'));
+			svgChord.appendChild(this.svgRectangle(9 + 55 * fret - 55 / 2, yy + 8, 16, 16, 8, 'checkedKey'));
 		} else {
 			if (fret < 0) {
 				svgChord.appendChild(this.svgRectangle(5, yy + 8, 16, 16, 8, 'blackKey'));
@@ -2335,10 +2336,11 @@ class ZvoogApp {
 		};
 		pChord.appendChild(svgChord);
 
-		svgChord.appendChild(this.svgRectangle(9 + 66 * 0, 8, 9, 90, 0, 'fretLine'));
-		svgChord.appendChild(this.svgRectangle(9 + 66 * 1, 8, 9, 90, 0, 'fretLine'));
-		svgChord.appendChild(this.svgRectangle(9 + 66 * 2, 8, 9, 90, 0, 'fretLine'));
-		svgChord.appendChild(this.svgRectangle(9 + 66 * 3, 8, 9, 90, 0, 'fretLine'));
+		svgChord.appendChild(this.svgRectangle(9 + 55 * 0, 8, 9, 90, 4, 'fret0'));
+		svgChord.appendChild(this.svgRectangle(9 + 55 * 1, 8, 9, 90, 4, 'fretLine'));
+		svgChord.appendChild(this.svgRectangle(9 + 55 * 2, 8, 9, 90, 4, 'fretLine'));
+		svgChord.appendChild(this.svgRectangle(9 + 55 * 3, 8, 9, 90, 4, 'fretLine'));
+		svgChord.appendChild(this.svgRectangle(9 + 55 * 4, 8, 9, 90, 4, 'fretLine'));
 
 		svgChord.appendChild(this.svgRectangle(0, 15 * 1, 300, 1, 0, 'stringLine'));
 		svgChord.appendChild(this.svgRectangle(0, 15 * 2, 300, 1, 0, 'stringLine'));
@@ -2375,6 +2377,18 @@ class ZvoogApp {
 			svgPiano.setAttribute('height', '100');
 			svgPiano.onclick = () => {
 				console.log('piano ', name);
+				if (onAir) {
+
+					this.cancelPlay();
+				} else {
+					let zp: ZvoogProgression = {
+						tone: 'F'
+						, mode: 'Aeolian'
+						, progression: [{ duration: { count: 8, division: 1 }, chord: "Fm" }]
+					};
+					this.setTracksByProg(this.selectedProgression, zp, () => { console.log('done', zapp.schedule); });
+					this.startPlay();
+				}
 			};
 			pPiano.appendChild(svgPiano);
 
@@ -2400,7 +2414,7 @@ class ZvoogApp {
 				svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth / 2 + keyWidth * 7 * oo + keyWidth * 5, topPad, keyWidth, blackH, 3, pitches.indexOf(10 + oo * 12) >= 0 ? 'checkedKey' : 'blackKey'));
 			}
 			console.log(fretsData);
-			let maxF=0;
+			let maxF = 0;
 			for (let aa = 0; aa < fretsData.length; aa++) {
 				let chode = fretsData[aa];
 				for (let cc = 0; cc < chode.length; cc++) {
@@ -2410,7 +2424,7 @@ class ZvoogApp {
 						for (let pp = 0; pp < one.positions.length; pp++) {
 							let pos = one.positions[pp];
 							console.log(pos.frets);
-							this.addGuitarChord(pos.frets, chordInfoContent);							
+							this.addGuitarChord(pos.frets, chordInfoContent);
 						}
 					}
 					/*

@@ -442,9 +442,32 @@ function rockDiceProgressionChanged() {
 }
 function rockDiceShowChord() {
     //zapp.refitUndoList();
+    zapp.preSchedule = JSON.parse(JSON.stringify(zapp.schedule));
+    for (var nn = 0; nn < zapp.preSchedule.effects.length; nn++) {
+        zapp.preSchedule.effects[nn].pluginEffect = null;
+    }
+    for (var tt = 0; tt < zapp.preSchedule.tracks.length; tt++) {
+        var one = zapp.preSchedule.tracks[tt];
+        for (var nn = 0; nn < one.effects.length; nn++) {
+            one.effects[nn].pluginEffect = null;
+        }
+        for (var vv = 0; vv < one.voices.length; vv++) {
+            var vox = one.voices[vv];
+            for (var nn = 0; nn < vox.effects.length; nn++) {
+                vox.effects[nn].pluginEffect = null;
+            }
+            vox.source.pluginSource = null;
+        }
+    }
     setDivStyleDisplay('chordInfoDiv', 'flex');
 }
 function rockDiceCloseChordInfoDiv() {
+    if (onAir)
+        zapp.cancelPlay();
+    zapp.schedule = zapp.preSchedule;
+    zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
+    zapp.fitCHordsTitle();
+    zapp.redefineProgGrid();
     setDivStyleDisplay('chordInfoDiv', 'none');
 }
 function rockDiceClickUndo() {
@@ -22402,7 +22425,7 @@ var ZvoogTicker = /** @class */ (function () {
 ;
 var ZvoogApp = /** @class */ (function () {
     function ZvoogApp() {
-        this.versionCode = 'v2.86';
+        this.versionCode = 'v2.87';
         this.stateName = 'lastSaved';
         this.counterName = 'num';
         this.undoName = 'historyList';
@@ -24724,7 +24747,7 @@ var ZvoogApp = /** @class */ (function () {
     };
     ZvoogApp.prototype.addFingerFret = function (fret, yy, svgChord) {
         if (fret > 0) {
-            svgChord.appendChild(this.svgRectangle(9 + 60 * fret - 66 / 2, yy + 8, 16, 16, 8, 'checkedKey'));
+            svgChord.appendChild(this.svgRectangle(9 + 55 * fret - 55 / 2, yy + 8, 16, 16, 8, 'checkedKey'));
         }
         else {
             if (fret < 0) {
@@ -24745,10 +24768,11 @@ var ZvoogApp = /** @class */ (function () {
             console.log('frets ', frets);
         };
         pChord.appendChild(svgChord);
-        svgChord.appendChild(this.svgRectangle(9 + 66 * 0, 8, 9, 90, 0, 'fretLine'));
-        svgChord.appendChild(this.svgRectangle(9 + 66 * 1, 8, 9, 90, 0, 'fretLine'));
-        svgChord.appendChild(this.svgRectangle(9 + 66 * 2, 8, 9, 90, 0, 'fretLine'));
-        svgChord.appendChild(this.svgRectangle(9 + 66 * 3, 8, 9, 90, 0, 'fretLine'));
+        svgChord.appendChild(this.svgRectangle(9 + 55 * 0, 8, 9, 90, 4, 'fret0'));
+        svgChord.appendChild(this.svgRectangle(9 + 55 * 1, 8, 9, 90, 4, 'fretLine'));
+        svgChord.appendChild(this.svgRectangle(9 + 55 * 2, 8, 9, 90, 4, 'fretLine'));
+        svgChord.appendChild(this.svgRectangle(9 + 55 * 3, 8, 9, 90, 4, 'fretLine'));
+        svgChord.appendChild(this.svgRectangle(9 + 55 * 4, 8, 9, 90, 4, 'fretLine'));
         svgChord.appendChild(this.svgRectangle(0, 15 * 1, 300, 1, 0, 'stringLine'));
         svgChord.appendChild(this.svgRectangle(0, 15 * 2, 300, 1, 0, 'stringLine'));
         svgChord.appendChild(this.svgRectangle(0, 15 * 3, 300, 2, 0, 'stringLine'));
@@ -24763,6 +24787,7 @@ var ZvoogApp = /** @class */ (function () {
         this.addFingerFret(frets[5], 15 * 0, svgChord);
     };
     ZvoogApp.prototype.showChordInfo = function (chordName) {
+        var _this = this;
         this.cancelPlay();
         var parts = chordName.split('/');
         var name = parts[0];
@@ -24783,6 +24808,18 @@ var ZvoogApp = /** @class */ (function () {
             svgPiano.setAttribute('height', '100');
             svgPiano.onclick = function () {
                 console.log('piano ', name);
+                if (onAir) {
+                    _this.cancelPlay();
+                }
+                else {
+                    var zp = {
+                        tone: 'F',
+                        mode: 'Aeolian',
+                        progression: [{ duration: { count: 8, division: 1 }, chord: "Fm" }]
+                    };
+                    _this.setTracksByProg(_this.selectedProgression, zp, function () { console.log('done', zapp.schedule); });
+                    _this.startPlay();
+                }
             };
             pPiano.appendChild(svgPiano);
             var leftPad = 3;

@@ -709,6 +709,9 @@ h1 {
 .fretLine {
 	fill: #333;
 }
+.fret0 {
+	fill: #666;
+}
 .stringLine {
 	fill: #ccc;
 }
