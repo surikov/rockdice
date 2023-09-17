@@ -109,23 +109,8 @@ function rockDiceInitUI() {
     console.log('rockDiceInitUI v3.04');
     zapp = new ZvoogApp();
     rockDiceUI.connectRoundButtons(zapp);
-    /*let test:HTMLElement|null=document.getElementById('drumColor');
-    if(test){
-        test.style.stroke='#f00';
-    }*/
     document.addEventListener("deviceready", onDeviceReady, false);
-    /*
-        document.addEventListener("doneAd", function (e) {
-            console.log('doneAd');
-            //control.adCounterSet(control.adMobMaxCounter);
-            zapp.rewardAdsShow();
-        }, false);
-        document.addEventListener("skipAd", function (e) {
-            console.log('skipAd');
-            //control.adCounterSet(control.adMobMaxCounter);
-        }, false);
-    */
-    dumpRandomProg();
+    //dumpRandomProg();
 }
 function rockDicePlayRandom() {
     if (zapp.storeChangedStateNoStartAd())
@@ -384,7 +369,7 @@ function rockDiceRestartOrStart() {
     //setDivStyleDisplay('playDiv', 'none');
     //setDivStyleDisplay('pauseDiv', 'block');
     rockDiceAdjustAnimation();
-    zapp.dumpHarmony();
+    //zapp.dumpHarmony();
 }
 function rockDiceAdjustAnimation() {
     if (onAir) {
@@ -706,10 +691,12 @@ function rockDiceClickStartInit() {
             if (Math.abs(lastSongPosition - position) > 0.33) {
                 lastSongPosition = position;
                 var xx = Math.round(0.2 + seconds2Duration384(position, zapp.selectedTempo) / 48);
-                if (xx < 0)
+                if (xx < 0) {
                     xx = 0;
-                if (xx > 127)
+                }
+                if (xx > 127) {
                     xx = 127;
+                }
                 reColorCell(lastGridPosition, '');
                 reColorCell(xx, '#ffffff');
                 lastGridPosition = xx;
@@ -22425,7 +22412,7 @@ var ZvoogTicker = /** @class */ (function () {
 ;
 var ZvoogApp = /** @class */ (function () {
     function ZvoogApp() {
-        this.versionCode = 'v2.87';
+        this.versionCode = 'v2.88';
         this.stateName = 'lastSaved';
         this.counterName = 'num';
         this.undoName = 'historyList';
@@ -24665,18 +24652,6 @@ var ZvoogApp = /** @class */ (function () {
         this.harmonizer.repeatAllVoices(this.schedule, duration);
         this.selectedProgression = nn;
         this.setAllTracks(onDone); //function () {
-        //console.log('done setTracksByProg');
-        /*let newTime = durations2time(me.schedule.measures);
-        me.ticker.waitLoopDuration = newTime;
-        if (me.ticker.ready()) {
-            me.ticker.restart();
-        }*/
-        //});
-        /*
-        (document.getElementById('progNameRow') as any).innerHTML='wtg';
-        console.log(document.getElementById('progNameRow'));
-        console.dir(document.getElementById('progNameRow'));
-        */
     };
     ZvoogApp.prototype.setProgression = function (v, onDone) {
         var nn = parseInt(v);
@@ -24789,9 +24764,9 @@ var ZvoogApp = /** @class */ (function () {
     ZvoogApp.prototype.showChordInfo = function (chordName) {
         var _this = this;
         this.cancelPlay();
-        var parts = chordName.split('/');
-        var name = parts[0];
-        console.log('info', name, chordName, parts);
+        //let parts = chordName.split('/');
+        //let name: string = parts[0];
+        console.log('showChordInfo', chordName);
         var chordInfoTitle = document.getElementById('chordInfoTitle');
         if (chordInfoTitle) {
             chordInfoTitle.innerHTML = chordName;
@@ -24807,18 +24782,31 @@ var ZvoogApp = /** @class */ (function () {
             svgPiano.setAttribute('width', '300');
             svgPiano.setAttribute('height', '100');
             svgPiano.onclick = function () {
-                console.log('piano ', name);
+                //console.log('piano ', name);
                 if (onAir) {
-                    _this.cancelPlay();
+                    zapp.cancelPlay();
                 }
                 else {
+                    console.log('pre', _this.schedule);
+                    zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
+                    zapp.schedule.title = 'temp beat';
+                    //console.log('done', zapp.schedule,'test',zapp.harmonizer.createEmptyBaseSchedule()); 
+                    zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
                     var zp = {
                         tone: 'F',
                         mode: 'Aeolian',
                         progression: [{ duration: { count: 8, division: 1 }, chord: "Fm" }]
                     };
-                    _this.setTracksByProg(_this.selectedProgression, zp, function () { console.log('done', zapp.schedule); });
-                    _this.startPlay();
+                    //zapp.setTracksByProg(zapp.selectedProgression, zp, () => { 
+                    //console.log('done', zapp.schedule,'test',zapp.harmonizer.createEmptyBaseSchedule()); 
+                    //zapp.startPlay();
+                    //});
+                    //console.log(this.schedule);
+                    //zapp.startPlay();
+                    zapp.setLeadPattern(0, function () {
+                        console.log('test', _this.schedule);
+                        zapp.startPlay();
+                    });
                 }
             };
             pPiano.appendChild(svgPiano);
@@ -24842,17 +24830,17 @@ var ZvoogApp = /** @class */ (function () {
                 svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth / 2 + keyWidth * 7 * oo + keyWidth * 4, topPad, keyWidth, blackH, 3, pitches.indexOf(8 + oo * 12) >= 0 ? 'checkedKey' : 'blackKey'));
                 svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth / 2 + keyWidth * 7 * oo + keyWidth * 5, topPad, keyWidth, blackH, 3, pitches.indexOf(10 + oo * 12) >= 0 ? 'checkedKey' : 'blackKey'));
             }
-            console.log(fretsData);
+            //console.log(fretsData);
             var maxF = 0;
             for (var aa = 0; aa < fretsData.length; aa++) {
                 var chode = fretsData[aa];
                 for (var cc = 0; cc < chode.length; cc++) {
                     var one = chode[cc];
                     if (one.key + one.suffix == chordName) {
-                        console.log(aa, cc);
+                        //console.log(aa, cc);
                         for (var pp = 0; pp < one.positions.length; pp++) {
                             var pos = one.positions[pp];
-                            console.log(pos.frets);
+                            //console.log(pos.frets);
                             this.addGuitarChord(pos.frets, chordInfoContent);
                         }
                     }
@@ -25128,7 +25116,7 @@ function randomChordVariation(chords) {
     var num = Math.floor(Math.random() * varCount);
     return chords[num];
 }
-function dumpRandomProg() {
+function __dumpRandomProg() {
     var majorMap = [
         { id: 'I', exits: ['ii', 'iii', 'IV', 'V', 'vi', 'vii'], chords: ['C', 'C', 'C', 'Cmaj7'] },
         { id: 'ii', exits: ['I', 'V', 'vi', 'vii'], chords: ['Dm', 'Dm', 'Dm', 'Dm7'] },

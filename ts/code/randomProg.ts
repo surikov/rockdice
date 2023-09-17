@@ -16,7 +16,7 @@ function randomChordVariation(chords: string[]): string {
 	var num = Math.floor(Math.random() * varCount);
 	return chords[num];
 }
-function dumpRandomProg() {
+function __dumpRandomProg() {
 	var majorMap: InOutChord[] = [
 		{ id: 'I', exits: ['ii', 'iii', 'IV', 'V', 'vi', 'vii'], chords: ['C','C','C', 'Cmaj7'] }
 		, { id: 'ii', exits: ['I', 'V', 'vi', 'vii'], chords: ['Dm','Dm','Dm', 'Dm7'] }

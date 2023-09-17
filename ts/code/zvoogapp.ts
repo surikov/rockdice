@@ -26,7 +26,7 @@ type StateSeed = {
 
 class ZvoogApp {
 
-	versionCode: string = 'v2.87';
+	versionCode: string = 'v2.88';
 	stateName: string = 'lastSaved';
 	counterName: string = 'num';
 	undoName: string = 'historyList';
@@ -2232,18 +2232,6 @@ class ZvoogApp {
 		this.harmonizer.repeatAllVoices(this.schedule, duration);
 		this.selectedProgression = nn;
 		this.setAllTracks(onDone);//function () {
-		//console.log('done setTracksByProg');
-		/*let newTime = durations2time(me.schedule.measures);
-		me.ticker.waitLoopDuration = newTime;
-		if (me.ticker.ready()) {
-			me.ticker.restart();
-		}*/
-		//});
-		/*
-		(document.getElementById('progNameRow') as any).innerHTML='wtg';
-		console.log(document.getElementById('progNameRow'));
-		console.dir(document.getElementById('progNameRow'));
-		*/
 	}
 	setProgression(v: any, onDone: (() => void) | undefined): void {
 		var nn = parseInt(v);
@@ -2358,9 +2346,9 @@ class ZvoogApp {
 	}
 	showChordInfo(chordName: string) {
 		this.cancelPlay();
-		let parts = chordName.split('/');
-		let name: string = parts[0];
-		console.log('info', name, chordName, parts);
+		//let parts = chordName.split('/');
+		//let name: string = parts[0];
+		console.log('showChordInfo',  chordName);
 		let chordInfoTitle: HTMLElement | null = document.getElementById('chordInfoTitle');
 		if (chordInfoTitle) {
 			chordInfoTitle.innerHTML = chordName;
@@ -2376,18 +2364,33 @@ class ZvoogApp {
 			svgPiano.setAttribute('width', '300');
 			svgPiano.setAttribute('height', '100');
 			svgPiano.onclick = () => {
-				console.log('piano ', name);
+				//console.log('piano ', name);
 				if (onAir) {
 
-					this.cancelPlay();
+					zapp.cancelPlay();
 				} else {
+                    console.log('pre',this.schedule);
+                    zapp.schedule=zapp.harmonizer.createEmptyBaseSchedule();
+                    zapp.schedule.title='temp beat';
+                    //console.log('done', zapp.schedule,'test',zapp.harmonizer.createEmptyBaseSchedule()); 
+                    zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
 					let zp: ZvoogProgression = {
 						tone: 'F'
 						, mode: 'Aeolian'
 						, progression: [{ duration: { count: 8, division: 1 }, chord: "Fm" }]
-					};
-					this.setTracksByProg(this.selectedProgression, zp, () => { console.log('done', zapp.schedule); });
-					this.startPlay();
+                    };
+                    
+					//zapp.setTracksByProg(zapp.selectedProgression, zp, () => { 
+                        //console.log('done', zapp.schedule,'test',zapp.harmonizer.createEmptyBaseSchedule()); 
+                        //zapp.startPlay();
+                    //});
+                    
+                    //console.log(this.schedule);
+                    //zapp.startPlay();
+                    zapp.setLeadPattern(0,()=>{
+                        console.log('test',this.schedule);
+                        zapp.startPlay();
+                    });
 				}
 			};
 			pPiano.appendChild(svgPiano);
@@ -2413,17 +2416,17 @@ class ZvoogApp {
 				svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth / 2 + keyWidth * 7 * oo + keyWidth * 4, topPad, keyWidth, blackH, 3, pitches.indexOf(8 + oo * 12) >= 0 ? 'checkedKey' : 'blackKey'));
 				svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth / 2 + keyWidth * 7 * oo + keyWidth * 5, topPad, keyWidth, blackH, 3, pitches.indexOf(10 + oo * 12) >= 0 ? 'checkedKey' : 'blackKey'));
 			}
-			console.log(fretsData);
+			//console.log(fretsData);
 			let maxF = 0;
 			for (let aa = 0; aa < fretsData.length; aa++) {
 				let chode = fretsData[aa];
 				for (let cc = 0; cc < chode.length; cc++) {
 					let one = chode[cc];
 					if (one.key + one.suffix == chordName) {
-						console.log(aa, cc);
+						//console.log(aa, cc);
 						for (let pp = 0; pp < one.positions.length; pp++) {
 							let pos = one.positions[pp];
-							console.log(pos.frets);
+							//console.log(pos.frets);
 							this.addGuitarChord(pos.frets, chordInfoContent);
 						}
 					}
