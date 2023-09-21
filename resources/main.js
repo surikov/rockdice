@@ -24779,17 +24779,19 @@ var ZvoogApp = /** @class */ (function () {
             if (onAir) {
                 zapp.cancelPlay();
             }
-            zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
-            zapp.schedule.title = 'temp beat';
-            zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName, frets: frets }];
-            zapp.setLeadPattern(13, function () {
-                //console.log('fillScheduleVoicesByPatterns');
-                zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
-                //console.log('prepareProject');
-                zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
-                //console.log('start', zapp.schedule);
-                zapp.startPlay();
-            });
+            else {
+                zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
+                zapp.schedule.title = 'temp beat';
+                zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName, frets: frets }];
+                zapp.setLeadPattern(13, function () {
+                    //console.log('fillScheduleVoicesByPatterns');
+                    zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
+                    //console.log('prepareProject');
+                    zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
+                    //console.log('start', zapp.schedule);
+                    zapp.startPlay();
+                });
+            }
         };
         pChord.appendChild(svgChord);
         svgChord.appendChild(this.svgRectangle(9 + 55 * 0, 8, 9, 90, 4, 'fret0'));
@@ -24833,15 +24835,17 @@ var ZvoogApp = /** @class */ (function () {
                 if (onAir) {
                     zapp.cancelPlay();
                 }
-                zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
-                zapp.schedule.title = 'temp beat';
-                zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName }];
-                zapp.setLeadPattern(0, function () {
-                    zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
-                    zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
-                    console.log('start', zapp.schedule);
-                    zapp.startPlay();
-                });
+                else {
+                    zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
+                    zapp.schedule.title = 'temp beat';
+                    zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName }];
+                    zapp.setLeadPattern(0, function () {
+                        zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
+                        zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
+                        console.log('start', zapp.schedule);
+                        zapp.startPlay();
+                    });
+                }
             };
             pPiano.appendChild(svgPiano);
             var leftPad = 3;

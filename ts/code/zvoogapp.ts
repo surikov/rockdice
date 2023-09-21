@@ -2313,7 +2313,7 @@ class ZvoogApp {
 			}
 		}
 	}
-	addGuitarChord(chordName: string,frets: number[], chordInfoContent: HTMLElement) {
+	addGuitarChord(chordName: string, frets: number[], chordInfoContent: HTMLElement) {
 		let pChord = document.createElement("p");
 		chordInfoContent.appendChild(pChord);
 		let svgChord = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -2321,12 +2321,12 @@ class ZvoogApp {
 		svgChord.setAttribute('height', '100');
 		svgChord.onclick = () => {
 			//console.log('frets ', frets);
-				if (onAir) {
-					zapp.cancelPlay();
-				}
+			if (onAir) {
+				zapp.cancelPlay();
+			} else {
 				zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
 				zapp.schedule.title = 'temp beat';
-				zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName,frets:frets }];
+				zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName, frets: frets }];
 				zapp.setLeadPattern(13, () => {
 					//console.log('fillScheduleVoicesByPatterns');
 					zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
@@ -2335,6 +2335,7 @@ class ZvoogApp {
 					//console.log('start', zapp.schedule);
 					zapp.startPlay();
 				});
+			}
 		};
 		pChord.appendChild(svgChord);
 
@@ -2380,16 +2381,17 @@ class ZvoogApp {
 			svgPiano.onclick = () => {
 				if (onAir) {
 					zapp.cancelPlay();
+				} else {
+					zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
+					zapp.schedule.title = 'temp beat';
+					zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName }];
+					zapp.setLeadPattern(0, () => {
+						zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
+						zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
+						console.log('start', zapp.schedule);
+						zapp.startPlay();
+					});
 				}
-				zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
-				zapp.schedule.title = 'temp beat';
-				zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName }];
-				zapp.setLeadPattern(0, () => {
-					zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
-					zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
-					console.log('start', zapp.schedule);
-					zapp.startPlay();
-				});
 			};
 			pPiano.appendChild(svgPiano);
 
@@ -2426,7 +2428,7 @@ class ZvoogApp {
 						for (let pp = 0; pp < one.positions.length; pp++) {
 							let pos = one.positions[pp];
 							//console.log(pos.frets);
-							this.addGuitarChord(chordName,pos.frets, chordInfoContent);
+							this.addGuitarChord(chordName, pos.frets, chordInfoContent);
 						}
 					}
 					/*
