@@ -1964,14 +1964,17 @@ var ZvoogHarmonizer = /** @class */ (function () {
     ZvoogHarmonizer.prototype.fillVoiceByPattern = function (t, s, schedule) {
         var voice = schedule.tracks[t].voices[s];
         if (voice.strumPattern) {
+            //console.log(t, s, 'fillVoiceByPattern strumPattern');
             this.fillVoiceByStrumPattern(voice, voice.strumPattern, schedule.measures, schedule.harmony.progression);
         }
         else {
             if (voice.keyPattern) {
+                //console.log(t, s, 'fillVoiceByPattern keyPattern');
                 this.fillVoiceByKeyPattern(voice, voice.keyPattern, schedule.measures, schedule.harmony.progression);
             }
             else {
                 if (voice.stringPattern) {
+                    //console.log(t, s, 'fillVoiceByPattern other');
                     this.fillVoiceByStringPattern(voice, voice.stringPattern, schedule.measures, schedule.harmony.progression);
                 }
             }
@@ -2116,6 +2119,7 @@ var ZvoogHarmonizer = /** @class */ (function () {
         var strumIdx = 0;
         voice.measureChords = [];
         for (var i = 0; i < measures.length; i++) {
+            //console.log('fillVoiceByStrumPattern', i);
             var measure = measures[i];
             var chords = { chords: [] };
             voice.measureChords.push(chords);
@@ -2123,7 +2127,10 @@ var ZvoogHarmonizer = /** @class */ (function () {
             var chordPos = { count: 0, division: 16 };
             var lastVar = 0;
             var lastChord = '';
+            var lastFrets = void 0;
             while (meterMore(point, nextpoint) < 0) {
+                //console.log(meterMore(point, nextpoint) ,'while', point.count, '/', point.division,'=>', nextpoint.count, '/', nextpoint.division);
+                //while 8 / 1 => 9 / 1
                 var symbol = pattern.directions.trim().substr(strumIdx, 1);
                 var curChordMelody = this.findProgressionPart(point, progression);
                 if (curChordMelody) {
@@ -2132,21 +2139,25 @@ var ZvoogHarmonizer = /** @class */ (function () {
                     if (symbol == 'V') {
                         variation = 1;
                         lastChord = curChordName; //chordMelody.chord;
+                        lastFrets = curChordMelody.frets;
                     }
                     else {
                         if (symbol == 'A') {
                             variation = 2;
                             lastChord = curChordName; //chordMelody.chord;
+                            lastFrets = curChordMelody.frets;
                         }
                         else {
                             if (symbol == 'X') {
                                 variation = 3;
                                 lastChord = curChordName; //chordMelody.chord;
+                                lastFrets = curChordMelody.frets;
                             }
                             else {
                                 if (symbol == '-' && lastChord != curChordName) { //chordMelody.chord) {
                                     variation = lastVar;
                                     lastChord = curChordName; //chordMelody.chord;
+                                    lastFrets = curChordMelody.frets;
                                 }
                             }
                         }
@@ -2158,7 +2169,10 @@ var ZvoogHarmonizer = /** @class */ (function () {
                         var lenChordMelody = this.findProgressionPart(lenPos, progression);
                         if (lenChordMelody) {
                             var lenChordExtracted = this.extractBassOrBase(lenChordMelody.chord, false);
-                            while (pattern.directions.trim().substr(strumIdx + len, 1) == '-' && strumIdx + len < pattern.directions.trim().length && lenChordExtracted == lastChord) {
+                            while (pattern.directions.trim().substr(strumIdx + len, 1) == '-'
+                                && strumIdx + len < pattern.directions.trim().length
+                                && lenChordExtracted == lastChord) {
+                                //console.log('len', len);
                                 len++;
                                 lenPos = plusMeter(lenPos, { count: 1, division: 16 });
                                 lenChordMelody = this.findProgressionPart(lenPos, progression);
@@ -2170,12 +2184,16 @@ var ZvoogHarmonizer = /** @class */ (function () {
                                 }
                             }
                             var pitches = this.findChordPitches(lastChord);
+                            if (lastFrets) {
+                                pitches = this.frets2pitches(lastFrets);
+                            }
                             var str = {
                                 when: chordPos,
                                 envelopes: [],
                                 variation: variation
                             };
                             for (var ss = 0; ss < pitches.length; ss++) {
+                                //console.log('ss', ss);
                                 str.envelopes.push({
                                     pitches: [{
                                             duration: { count: len, division: 16 },
@@ -2190,30 +2208,46 @@ var ZvoogHarmonizer = /** @class */ (function () {
                         //
                     }
                     point = simplifyMeter(plusMeter(point, { count: 1, division: 16 }));
+                    //console.log('point', point.count, '/', point.division);
                     chordPos = simplifyMeter(plusMeter(chordPos, { count: 1, division: 16 }));
                     strumIdx++;
                     if (strumIdx >= pattern.directions.trim().length) {
                         strumIdx = 0;
                     }
                 }
+                else {
+                    break;
+                }
             }
             point = nextpoint;
         }
+    };
+    ZvoogHarmonizer.prototype.frets2pitches = function (s) {
+        var pitches = [];
+        for (var k = 0; k < this.guitarStrings6.length; k++) {
+            if (s[k] < 0) {
+                //pitches.push(-1);
+            }
+            else {
+                pitches.push(this.guitarStrings6[k] + s[k] - 12);
+            }
+        }
+        return pitches;
     };
     ZvoogHarmonizer.prototype.tryToFindChordPitches = function (chordName) {
         for (var i = 0; i < chordfretsData.length; i++) {
             if (chordfretsData[i].name == chordName) {
                 var s = chordfretsData[i].frets;
-                var pitches = [];
+                /*let pitches: number[] = [];
                 for (var k = 0; k < this.guitarStrings6.length; k++) {
                     if (s[k] < 0) {
                         //pitches.push(-1);
-                    }
-                    else {
+                    } else {
                         pitches.push(this.guitarStrings6[k] + s[k] - 12);
                     }
                 }
-                return pitches;
+                return pitches;*/
+                return this.frets2pitches(s);
             }
         }
         return null;
@@ -2222,16 +2256,16 @@ var ZvoogHarmonizer = /** @class */ (function () {
         for (var i = 0; i < chordfretsData.length; i++) {
             if (chordfretsData[i].name == chordName) {
                 var s = chordfretsData[i].frets;
-                var pitches = [];
+                /*let pitches: number[] = [];
                 for (var k = 0; k < this.guitarStrings6.length; k++) {
                     if (s[k] < 0) {
                         pitches.push(-1);
-                    }
-                    else {
+                    } else {
                         pitches.push(this.guitarStrings6[k] + s[k] - 12);
                     }
                 }
-                return pitches;
+                return pitches;*/
+                return this.frets2pitches(s);
             }
         }
         return null;
@@ -22119,6 +22153,7 @@ var ZvoogTicker = /** @class */ (function () {
         }
     };
     ZvoogTicker.prototype.cancel = function () {
+        console.log('ZvoogTicker.cancel');
         window.cancelAnimationFrame(this.scheduledTick);
         for (var t = 0; t < this.scheduleDefinition.tracks.length; t++) {
             var track = this.scheduleDefinition.tracks[t];
@@ -22169,8 +22204,8 @@ var ZvoogTicker = /** @class */ (function () {
         }
     };
     ZvoogTicker.prototype.start = function (nextPositionTime, loopStart, loopDuration) {
+        console.log('ZvoogTicker.start', this.onAir);
         if (this.onAir) {
-            //console.log('skip start');
             return false;
         }
         var tickDuration = this.defTickDuration;
@@ -22412,7 +22447,7 @@ var ZvoogTicker = /** @class */ (function () {
 ;
 var ZvoogApp = /** @class */ (function () {
     function ZvoogApp() {
-        this.versionCode = 'v2.88';
+        this.versionCode = 'v2.89';
         this.stateName = 'lastSaved';
         this.counterName = 'num';
         this.undoName = 'historyList';
@@ -24733,14 +24768,28 @@ var ZvoogApp = /** @class */ (function () {
             }
         }
     };
-    ZvoogApp.prototype.addGuitarChord = function (frets, chordInfoContent) {
+    ZvoogApp.prototype.addGuitarChord = function (chordName, frets, chordInfoContent) {
         var pChord = document.createElement("p");
         chordInfoContent.appendChild(pChord);
         var svgChord = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svgChord.setAttribute('width', '300');
         svgChord.setAttribute('height', '100');
         svgChord.onclick = function () {
-            console.log('frets ', frets);
+            //console.log('frets ', frets);
+            if (onAir) {
+                zapp.cancelPlay();
+            }
+            zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
+            zapp.schedule.title = 'temp beat';
+            zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName, frets: frets }];
+            zapp.setLeadPattern(13, function () {
+                //console.log('fillScheduleVoicesByPatterns');
+                zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
+                //console.log('prepareProject');
+                zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
+                //console.log('start', zapp.schedule);
+                zapp.startPlay();
+            });
         };
         pChord.appendChild(svgChord);
         svgChord.appendChild(this.svgRectangle(9 + 55 * 0, 8, 9, 90, 4, 'fret0'));
@@ -24762,7 +24811,6 @@ var ZvoogApp = /** @class */ (function () {
         this.addFingerFret(frets[5], 15 * 0, svgChord);
     };
     ZvoogApp.prototype.showChordInfo = function (chordName) {
-        var _this = this;
         this.cancelPlay();
         //let parts = chordName.split('/');
         //let name: string = parts[0];
@@ -24782,32 +24830,18 @@ var ZvoogApp = /** @class */ (function () {
             svgPiano.setAttribute('width', '300');
             svgPiano.setAttribute('height', '100');
             svgPiano.onclick = function () {
-                //console.log('piano ', name);
                 if (onAir) {
                     zapp.cancelPlay();
                 }
-                else {
-                    console.log('pre', _this.schedule);
-                    zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
-                    zapp.schedule.title = 'temp beat';
-                    //console.log('done', zapp.schedule,'test',zapp.harmonizer.createEmptyBaseSchedule()); 
+                zapp.schedule = zapp.harmonizer.createEmptyBaseSchedule();
+                zapp.schedule.title = 'temp beat';
+                zapp.schedule.harmony.progression = [{ duration: { count: 8, division: 1 }, chord: chordName }];
+                zapp.setLeadPattern(0, function () {
+                    zapp.harmonizer.fillScheduleVoicesByPatterns(zapp.schedule);
                     zapp.ticker.prepareProject(zapp.schedule, zapp.audioContext, zapp.audioContext.destination);
-                    var zp = {
-                        tone: 'F',
-                        mode: 'Aeolian',
-                        progression: [{ duration: { count: 8, division: 1 }, chord: "Fm" }]
-                    };
-                    //zapp.setTracksByProg(zapp.selectedProgression, zp, () => { 
-                    //console.log('done', zapp.schedule,'test',zapp.harmonizer.createEmptyBaseSchedule()); 
-                    //zapp.startPlay();
-                    //});
-                    //console.log(this.schedule);
-                    //zapp.startPlay();
-                    zapp.setLeadPattern(0, function () {
-                        console.log('test', _this.schedule);
-                        zapp.startPlay();
-                    });
-                }
+                    console.log('start', zapp.schedule);
+                    zapp.startPlay();
+                });
             };
             pPiano.appendChild(svgPiano);
             var leftPad = 3;
@@ -24815,7 +24849,7 @@ var ZvoogApp = /** @class */ (function () {
             var keyWidth = 14;
             var whiteH = 90;
             var blackH = 60;
-            var pitches = zapp.harmonizer.pianoKeysByName(name);
+            var pitches = zapp.harmonizer.pianoKeysByName(chordName);
             for (var oo = 0; oo < 3; oo++) {
                 svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth * 7 * oo + keyWidth * 0, topPad, keyWidth, whiteH, 3, pitches.indexOf(0 + oo * 12) >= 0 ? 'checkedKey' : 'whiteKey'));
                 svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth * 7 * oo + keyWidth * 1, topPad, keyWidth, whiteH, 3, pitches.indexOf(2 + oo * 12) >= 0 ? 'checkedKey' : 'whiteKey'));
@@ -24831,7 +24865,7 @@ var ZvoogApp = /** @class */ (function () {
                 svgPiano.appendChild(this.svgRectangle(leftPad + keyWidth / 2 + keyWidth * 7 * oo + keyWidth * 5, topPad, keyWidth, blackH, 3, pitches.indexOf(10 + oo * 12) >= 0 ? 'checkedKey' : 'blackKey'));
             }
             //console.log(fretsData);
-            var maxF = 0;
+            //let maxF = 0;
             for (var aa = 0; aa < fretsData.length; aa++) {
                 var chode = fretsData[aa];
                 for (var cc = 0; cc < chode.length; cc++) {
@@ -24841,7 +24875,7 @@ var ZvoogApp = /** @class */ (function () {
                         for (var pp = 0; pp < one.positions.length; pp++) {
                             var pos = one.positions[pp];
                             //console.log(pos.frets);
-                            this.addGuitarChord(pos.frets, chordInfoContent);
+                            this.addGuitarChord(chordName, pos.frets, chordInfoContent);
                         }
                     }
                     /*

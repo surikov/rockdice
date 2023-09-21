@@ -82,6 +82,7 @@ type ZvoogMeasure = {
 type ZvoogChordMelody = {
 	duration: ZvoogMeter
 	, chord: string
+	,frets?: number[]
 };
 type ZvoogProgression = {
 	//base: number

@@ -292,6 +292,7 @@ class ZvoogTicker {
 		}
 	}
 	cancel() {
+		console.log('ZvoogTicker.cancel');
 		window.cancelAnimationFrame(this.scheduledTick);
 		for (let t = 0; t < this.scheduleDefinition.tracks.length; t++) {
 			let track: ZvoogTrack = this.scheduleDefinition.tracks[t];
@@ -344,8 +345,9 @@ class ZvoogTicker {
 	waitLoopStart = 0;
 	waitLoopDuration = 0;
 	start(nextPositionTime: number, loopStart: number, loopDuration: number): boolean {
+		console.log('ZvoogTicker.start',this.onAir);
 		if (this.onAir) {
-			//console.log('skip start');
+			
 			return false;
 		}
 		let tickDuration = this.defTickDuration;

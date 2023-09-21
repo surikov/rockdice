@@ -484,12 +484,15 @@ class ZvoogHarmonizer {
 		let voice: ZvoogVoice = schedule.tracks[t].voices[s];
 
 		if (voice.strumPattern) {
+			//console.log(t, s, 'fillVoiceByPattern strumPattern');
 			this.fillVoiceByStrumPattern(voice, voice.strumPattern, schedule.measures, schedule.harmony.progression);
 		} else {
 			if (voice.keyPattern) {
+				//console.log(t, s, 'fillVoiceByPattern keyPattern');
 				this.fillVoiceByKeyPattern(voice, voice.keyPattern, schedule.measures, schedule.harmony.progression);
 			} else {
 				if (voice.stringPattern) {
+					//console.log(t, s, 'fillVoiceByPattern other');
 					this.fillVoiceByStringPattern(voice, voice.stringPattern, schedule.measures, schedule.harmony.progression);
 				}
 			}
@@ -655,6 +658,9 @@ class ZvoogHarmonizer {
 		let strumIdx = 0;
 		voice.measureChords = [];
 		for (let i = 0; i < measures.length; i++) {
+
+			//console.log('fillVoiceByStrumPattern', i);
+
 			let measure: ZvoogMeasure = measures[i];
 			let chords: ZvoogMeasureChord = { chords: [] };
 			voice.measureChords.push(chords);
@@ -662,7 +668,12 @@ class ZvoogHarmonizer {
 			let chordPos: ZvoogMeter = { count: 0, division: 16 };
 			let lastVar = 0;
 			let lastChord = '';
+			let lastFrets:undefined|number[];
 			while (meterMore(point, nextpoint) < 0) {
+
+				//console.log(meterMore(point, nextpoint) ,'while', point.count, '/', point.division,'=>', nextpoint.count, '/', nextpoint.division);
+				//while 8 / 1 => 9 / 1
+
 				let symbol: string = pattern.directions.trim().substr(strumIdx, 1);
 				let curChordMelody: ZvoogChordMelody | null = this.findProgressionPart(point, progression);
 				if (curChordMelody) {
@@ -671,18 +682,22 @@ class ZvoogHarmonizer {
 					if (symbol == 'V') {
 						variation = 1;
 						lastChord = curChordName;//chordMelody.chord;
+						lastFrets=curChordMelody.frets;
 					} else {
 						if (symbol == 'A') {
 							variation = 2;
 							lastChord = curChordName;//chordMelody.chord;
+							lastFrets=curChordMelody.frets;
 						} else {
 							if (symbol == 'X') {
 								variation = 3;
 								lastChord = curChordName;//chordMelody.chord;
+								lastFrets=curChordMelody.frets;
 							} else {
 								if (symbol == '-' && lastChord != curChordName) {//chordMelody.chord) {
 									variation = lastVar;
 									lastChord = curChordName;//chordMelody.chord;
+									lastFrets=curChordMelody.frets;
 								}
 							}
 						}
@@ -695,7 +710,12 @@ class ZvoogHarmonizer {
 						let lenChordMelody: ZvoogChordMelody | null = this.findProgressionPart(lenPos, progression);
 						if (lenChordMelody) {
 							let lenChordExtracted = this.extractBassOrBase(lenChordMelody.chord, false);
-							while (pattern.directions.trim().substr(strumIdx + len, 1) == '-' && strumIdx + len < pattern.directions.trim().length && lenChordExtracted == lastChord) {
+							while (
+								pattern.directions.trim().substr(strumIdx + len, 1) == '-'
+								&& strumIdx + len < pattern.directions.trim().length
+								&& lenChordExtracted == lastChord
+							) {
+								//console.log('len', len);
 								len++;
 								lenPos = plusMeter(lenPos, { count: 1, division: 16 });
 								lenChordMelody = this.findProgressionPart(lenPos, progression);
@@ -706,12 +726,16 @@ class ZvoogHarmonizer {
 								}
 							}
 							let pitches = this.findChordPitches(lastChord);
+							if(lastFrets){
+								pitches = this.frets2pitches(lastFrets);
+							}
 							var str: ZvoogChord = {
 								when: chordPos
 								, envelopes: []
 								, variation: variation
 							};
 							for (let ss = 0; ss < pitches.length; ss++) {
+								//console.log('ss', ss);
 								str.envelopes.push(
 									{
 										pitches: [{
@@ -728,22 +752,37 @@ class ZvoogHarmonizer {
 						//
 					}
 					point = simplifyMeter(plusMeter(point, { count: 1, division: 16 }));
+					//console.log('point', point.count, '/', point.division);
+				
 					chordPos = simplifyMeter(plusMeter(chordPos, { count: 1, division: 16 }));
 					strumIdx++;
 					if (strumIdx >= pattern.directions.trim().length) {
 						strumIdx = 0;
 					}
+				}else{
+					break;
 				}
 			}
+			
 			point = nextpoint;
 		}
 	}
-
+frets2pitches(s: number[]): number[]{
+	let pitches: number[] = [];
+	for (var k = 0; k < this.guitarStrings6.length; k++) {
+		if (s[k] < 0) {
+			//pitches.push(-1);
+		} else {
+			pitches.push(this.guitarStrings6[k] + s[k] - 12);
+		}
+	}
+	return pitches;
+}
 	tryToFindChordPitches(chordName: String): number[] | null {
 		for (var i = 0; i < chordfretsData.length; i++) {
 			if (chordfretsData[i].name == chordName) {
 				var s: number[] = chordfretsData[i].frets;
-				let pitches: number[] = [];
+				/*let pitches: number[] = [];
 				for (var k = 0; k < this.guitarStrings6.length; k++) {
 					if (s[k] < 0) {
 						//pitches.push(-1);
@@ -751,7 +790,8 @@ class ZvoogHarmonizer {
 						pitches.push(this.guitarStrings6[k] + s[k] - 12);
 					}
 				}
-				return pitches;
+				return pitches;*/
+				return this.frets2pitches(s);
 			}
 		}
 
@@ -761,7 +801,7 @@ class ZvoogHarmonizer {
 		for (var i = 0; i < chordfretsData.length; i++) {
 			if (chordfretsData[i].name == chordName) {
 				var s: number[] = chordfretsData[i].frets;
-				let pitches: number[] = [];
+				/*let pitches: number[] = [];
 				for (var k = 0; k < this.guitarStrings6.length; k++) {
 					if (s[k] < 0) {
 						pitches.push(-1);
@@ -769,7 +809,8 @@ class ZvoogHarmonizer {
 						pitches.push(this.guitarStrings6[k] + s[k] - 12);
 					}
 				}
-				return pitches;
+				return pitches;*/
+				return this.frets2pitches(s);
 			}
 		}
 		return null;
@@ -1147,7 +1188,7 @@ class ZvoogHarmonizer {
 			var stepNum = this.chordStepDifference(this.chordSymbol(pitchHalfTone), chords[k].name);
 			if (this.stepSymbol(chords[k].name, stepNum) != stepSymb) {
 				stepSymb = this.stepSymbol(chords[k].name, stepNum);
-				stepLine = stepLine + dlmtr + chords[k].name+':'+chords[k].count;
+				stepLine = stepLine + dlmtr + chords[k].name + ':' + chords[k].count;
 				//stepLine = stepLine + dlmtr + stepSymb;
 				dlmtr = '-';
 			}
@@ -1211,7 +1252,7 @@ class ZvoogHarmonizer {
 			if (found.length == 0) {
 				found.push({ name: chordMelody[i].chord, count: 0 });
 				counts.push(found[0]);
-				
+
 			}
 			found[0].count = found[0].count + chordMelody[i].duration.count / chordMelody[i].duration.division;
 			chords.push(chordMelody[i].chord);
@@ -1274,7 +1315,7 @@ class ZvoogHarmonizer {
 		upper.sort(function (a, b) {
 			return a.steps.localeCompare(b.steps);
 		});
-		console.log('calculateProgressionMode', rates,upper[0]);
+		console.log('calculateProgressionMode', rates, upper[0]);
 		return upper[0];
 	}
 
